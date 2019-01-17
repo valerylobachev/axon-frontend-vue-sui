@@ -1,0 +1,12 @@
+//$import-google-fonts: false;
+//$icons-font-path: '../../node_modules/semantic-ui-sass/icons' !default;
+//$flags-image-path: '../../node_modules/semantic-ui-sass/images' !default;
+//@import '../../node_modules/semantic-ui-sass/semantic-ui.scss';
+
+@import '../../node_modules/lato-font/scss/_public-api.scss';
+
+$lato-font-path: '../../node_modules/lato-font/fonts';
+
+//@include lato-include-font('black');
+//@include lato-include-font('medium');
+@include lato-include-font('normal');
