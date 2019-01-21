@@ -45,6 +45,16 @@ export default {
                     filter: 'Filter',
                     notFound: 'No schema has been found.',
                 },
+                schemaForm: {
+                    createTitle: 'Create schema',
+                    viewTitle: 'View schema',
+                    editTitle: 'Edit schema',
+                    nameRequired: 'Name required',
+                    xmlRequired: 'XML required',
+                    infoTab: 'Info',
+                    designerTab: 'Designer',
+                    xmlTab: 'XML',
+                },
             },
 
         },
@@ -52,6 +62,11 @@ export default {
             delete: 'Delete',
             cancel: 'Cancel',
             error: 'Error',
+            save: 'Save',
+            edit: 'Edit',
+            view: 'View',
+            saved: 'Saved',
+            changed: 'Changed',
         },
     },
 

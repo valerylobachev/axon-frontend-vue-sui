@@ -36,8 +36,8 @@ const axonRoutes =  [
                 name: 'schemas',
             },
             {
-                path: 'schema',
-                component: () => import(/* webpackChunkName: "bpm-config" */'./bpm/config/Schema.vue'),
+                path: 'schema/:action/:id',
+                component: () => import(/* webpackChunkName: "bpm-config" */'./bpm/config/SchemaForm.vue'),
                 name: 'schema',
             },
         ],

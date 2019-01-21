@@ -11,17 +11,25 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "bpmn-js": "^3.1.0",
+    "bpmn-js-properties-panel": "^0.29.0",
+    "bpmn-moddle": "^5.1.6",
+    "camunda-bpmn-moddle": "^3.2.0",
+    "cmmn-js": "^0.17.0",
+    "dmn-js": "^6.2.0",
     "keycloak-js": "^4.8.3",
     "lodash": "^4.17.11",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-vue": "^0.7.0",
+    "uuid": "^3.3.2",
     "vue": "^2.5.21",
     "vue-class-component": "^6.0.0",
     "vue-i18n": "^8.7.0",
     "vue-property-decorator": "^7.0.0",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1",
-    "vuex-class": "^0.3.1"
+    "vuex-class": "^0.3.1",
+    "vuex-router-sync": "^5.0.0"
   },
   "devDependencies": {
     "@types/chai": "^4.1.0",

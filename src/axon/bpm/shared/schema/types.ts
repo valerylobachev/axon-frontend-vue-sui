@@ -23,3 +23,18 @@ export interface SchemaState {
     saving: boolean;
     saved: boolean;
 }
+
+export interface InitOptions {
+    mode: string,
+    id: string
+}
+
+export interface LoadOptions {
+    mode: string,
+    schema: Schema
+}
+
+export interface UpdateOptions {
+    schema: Schema
+    summary: SchemaSummary
+}

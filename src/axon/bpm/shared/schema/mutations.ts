@@ -1,6 +1,8 @@
 import {MutationTree} from 'vuex';
-import {SchemaState} from '@/axon/bpm/shared/schema/types';
+import {LoadOptions, SchemaState, UpdateOptions} from '@/axon/bpm/shared/schema/types';
 import {SchemaSummary} from '@/axon/bpm/shared/schema/schema.model';
+import uuidv4 from 'uuid/v4';
+import {vm} from '@/main';
 
 export const mutations: MutationTree<SchemaState> = {
     FindSchemas: (state: SchemaState, filter: string) => {
@@ -13,7 +15,7 @@ export const mutations: MutationTree<SchemaState> = {
         state.entities = {};
         schemas.forEach(s => state.entities[s.id] = s);
         state.sortedEntities = sortEntities(state);
-        state.failure = null
+        state.failure = null;
     },
     FindSchemasFailure: (state: SchemaState, failure: any) => {
         state.ids = [];
@@ -41,22 +43,91 @@ export const mutations: MutationTree<SchemaState> = {
         state.sortedEntities = sortEntities(state);
     },
     ClearFailure: (state: SchemaState) => {
-        state.failure = null
+        state.failure = null;
     },
+
+    LoadSchema: (state: SchemaState) => {
+        state.failure = null;
+        state.loading = true;
+        state.loaded = false;
+    },
+
+    LoadSchemaSuccess: (state: SchemaState, {mode, schema}: LoadOptions) => {
+        state.entity = {...schema};
+        if (mode === 'create') {
+            state.entity.id = uuidv4()
+        }
+        state.failure = null;
+        state.loading = false;
+        state.loaded = true;
+    },
+
+    LoadSchemaFailure: (state: SchemaState, failure: any) => {
+        state.entity = null;
+        state.failure = failure;
+        state.loading = false;
+        state.loaded = false;
+    },
+
+    CreateSchema: (state: SchemaState) => {
+        state.saving = true;
+        state.failure = null;
+        state.saved = false;
+    },
+
+    CreateSchemaSuccess: (state: SchemaState, {schema, summary}: UpdateOptions) => {
+        state.saving = false;
+        state.failure = null;
+        state.saved = true;
+        state.entities[summary.id] = summary;
+        state.ids = Object.keys(state.entities);
+        state.sortedEntities = sortEntities(state);
+        state.entity = {...schema};
+        vm.$router.push(`/bpm-config/schema/update/${schema.id}`)
+    },
+
+    CreateSchemaFailure: (state: SchemaState, failure: any) => {
+        state.saving = false;
+        state.failure = failure;
+        state.saved = false;
+    },
+
+    UpdateSchema: (state: SchemaState) => {
+        state.saving = true;
+        state.failure = null;
+        state.saved = false;
+    },
+
+    UpdateSchemaSuccess: (state: SchemaState, {schema, summary}: UpdateOptions) => {
+        state.saving = false;
+        state.failure = null;
+        state.saved = true;
+        state.entities[summary.id] = summary;
+        state.ids = Object.keys(state.entities);
+        state.sortedEntities = sortEntities(state);
+        state.entity = {...schema};
+    },
+
+    UpdateSchemaFailure: (state: SchemaState, failure: any) => {
+        state.saving = false;
+        state.failure = failure;
+        state.saved = false;
+    },
+
     DeleteSchema: (state: SchemaState, id: string) => {
         state.saving = true;
-        state.failure = null
+        state.failure = null;
     },
     DeleteSchemaSuccess: (state: SchemaState, id: string) => {
-        delete state.entities[id]
+        delete state.entities[id];
         state.ids = state.ids.filter(i => i !== id);
         state.sortedEntities = sortEntities(state);
         state.saving = false;
-        state.failure = null
+        state.failure = null;
     },
     DeleteSchemaFailure: (state: SchemaState, failure: any) => {
         state.saving = false;
-        state.failure = failure
+        state.failure = failure;
     },
 
 };

@@ -28,7 +28,7 @@ export default {
                 schema: {
                     id: 'Ид',
                     name: 'Наименование',
-                    description: 'Описания',
+                    description: 'Описание',
                     notation: 'Нотация',
                     processDefinitions: 'Определения процессов',
                     xml: 'XML',
@@ -45,6 +45,16 @@ export default {
                     filter: 'Фильтр',
                     notFound: 'Схемы не найдены',
                 },
+                schemaForm: {
+                    createTitle: 'Создание схемы',
+                    viewTitle: 'Просмотр схемы',
+                    editTitle: 'Изменение схемы',
+                    nameRequired: 'Наименование обязательно',
+                    xmlRequired: 'XML обязателен',
+                    infoTab: 'Инфо',
+                    designerTab: 'Дизайнер',
+                    xmlTab: 'XML',
+                },
             },
 
         },
@@ -52,6 +62,11 @@ export default {
             delete: 'Удалить',
             cancel: 'Отмена',
             error: 'Ошибка',
+            save: 'Сохранить',
+            edit: 'Изменить',
+            view: 'Просмотр',
+            saved: 'Сохранено',
+            changed: 'Изменено',
         },
     },
 
