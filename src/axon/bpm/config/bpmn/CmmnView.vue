@@ -25,8 +25,8 @@
             this.viewer = new CmmnJS({
                 container: selector,
                 keyboard: {
-                    bindTo: window
-                }
+                    bindTo: selector,
+                },
             });
             if (this.value && this.value !== '') {
                 this.importXml(this.value);

@@ -8,11 +8,10 @@
 
         <template slot="toolbar">
             <div class="ten wide computer column eight wide tablet column">
-                <div class="ui green basic label" v-if="dirty && action !== 'view'">
-                    <!--v-if="formGroup.dirty && action !== 'view'"-->
+                <div class="ui green basic label" v-if="isDirty && action !== 'view'">
                     {{ $t('axon.shared.changed') }}
                 </div>
-                <div class="ui green basic label" v-if="saved && !dirty && action !== 'view'">
+                <div class="ui green basic label" v-if="saved && !isDirty && action !== 'view'">
                     {{ $t('axon.shared.saved') }}
                 </div>
                 <div class="ui red label"
@@ -27,7 +26,7 @@
                 <div class="ui right floated header">
                     <router-link class="ui basic button"
                                  to="../../schemas"
-                                 :disabled="dirty">
+                                 :class="{ disabled: isDirty }">
                         {{ $t('axon.bpm.form.schemas.title') }}
                     </router-link>
                     <router-link class="ui basic button"
@@ -38,14 +37,13 @@
                     <router-link class="ui basic button"
                                  v-if="action == 'edit'"
                                  :to="`../../schema/view/${id}`"
-                                 :disabled="dirty">
-                        <!--:disabled="formGroup.dirty"-->
+                                 :class="{ disabled: isDirty }">
                         {{ $t('axon.shared.view') }}
                     </router-link>
                     <button class="ui primary button"
                             v-if="action != 'view'"
+                            :disabled="!isValid"
                             @click="save()">
-                        <!--:disabled="!formGroup.valid"-->
                         {{ $t('axon.shared.save') }}
                     </button>
                 </div>
@@ -71,8 +69,8 @@
                             <input type="text" name="name"
                                    v-model="schema.name"
                                    :readOnly="action == 'view'">
-                            <div class="ui error message">
-                                <!--v-if="nameControl.hasError('required')"-->
+                            <div class="ui error message"
+                                 v-if="!(this.schema.name && this.schema.name.length > 0)">
                                 {{ $t('axon.bpm.form.schemaForm.nameRequired') }}
                             </div>
                         </div>
@@ -92,15 +90,17 @@
                         </div>
                     </sui-tab-pane>
                     <sui-tab-pane :title="$t('axon.bpm.form.schemaForm.designerTab')">
-                        <bpmn-edit v-if="schema.notation === 'BPMN' && action === 'edit'"
-                                   v-model="schema.xml"
-                                   @processDefinitions="schema.processDefinitions = $event"></bpmn-edit>
-                        <bpmn-view v-if="schema.notation === 'BPMN' && action === 'view'"
-                                   v-model="schema.xml"></bpmn-view>
-                        <dmn-view v-if="schema.notation === 'DMN' && action === 'view'"
-                                   v-model="schema.xml"></dmn-view>
-                        <cmmn-view v-if="schema.notation === 'CMMN' && action === 'view'"
-                                  v-model="schema.xml"></cmmn-view>
+                        <div class="reset-padding">
+                            <bpmn-edit v-if="schema.notation === 'BPMN' && action === 'edit'"
+                                       v-model="schema.xml"
+                                       @processDefinitions="schema.processDefinitions = $event"></bpmn-edit>
+                            <bpmn-view v-if="schema.notation === 'BPMN' && action === 'view'"
+                                       v-model="schema.xml"></bpmn-view>
+                            <dmn-view v-if="schema.notation === 'DMN' && action === 'view'"
+                                      v-model="schema.xml"></dmn-view>
+                            <cmmn-view v-if="schema.notation === 'CMMN' && action === 'view'"
+                                       v-model="schema.xml"></cmmn-view>
+                        </div>
                     </sui-tab-pane>
 
                     <sui-tab-pane :title="$t('axon.bpm.form.schemaForm.xmlTab')">
@@ -109,8 +109,8 @@
                             <textarea class="xml-edit" name="xml" :placeholder="$t('axon.bpm.md.schema.xml')"
                                       v-model="schema.xml"
                                       :readOnly="action == 'view'"></textarea>
-                            <div class="ui error message">
-                                <!--v-if="xmlControl.hasError('required')"-->
+                            <div class="ui error message"
+                                 v-if="!(this.schema.description && this.schema.description.length > 0)">
                                 {{ $t('axon.bpm.form.schemaForm.xmlRequired') }}
                             </div>
                         </div>
@@ -184,7 +184,7 @@
             }
         }
 
-        get dirty() {
+        get isDirty() {
             if (this.entity && this.schema) {
                 return this.schema.name !== this.entity.name ||
                     this.schema.description !== this.entity.description ||
@@ -192,6 +192,11 @@
             } else {
                 return false;
             }
+        }
+
+        get isValid() {
+            return this.schema.name && this.schema.name.length > 0 &&
+                this.schema.description && this.schema.description.length > 0;
         }
     }
 </script>
@@ -215,5 +220,9 @@
     .ui.tab.segment.attached {
         border-top: 0px;
 
+    }
+
+    .reset-padding {
+        margin: -14px;
     }
 </style>
