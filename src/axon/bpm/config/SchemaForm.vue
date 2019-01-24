@@ -196,7 +196,7 @@
 
         get isValid() {
             return this.schema.name && this.schema.name.length > 0 &&
-                this.schema.description && this.schema.description.length > 0;
+                this.schema.xml && this.schema.xml.length > 0;
         }
     }
 </script>

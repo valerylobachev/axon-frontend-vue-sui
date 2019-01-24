@@ -14,6 +14,7 @@ import store from './store';
 import i18n from './lang';
 import {initStore} from '@/axon/init';
 import {sync} from 'vuex-router-sync';
+import './registerServiceWorker'
 
 Vue.config.productionTip = false;
 Vue.use(SuiVue);
