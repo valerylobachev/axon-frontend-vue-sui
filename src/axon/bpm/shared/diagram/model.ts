@@ -1,4 +1,4 @@
-export interface SchemaSummary {
+export interface BpmDiagramSummary {
     id: string,
     name: string,
     description?: string,
@@ -6,11 +6,11 @@ export interface SchemaSummary {
     processDefinitions?: string
 }
 
-export interface Schema extends SchemaSummary {
+export interface BpmDiagram extends BpmDiagramSummary {
     xml: string
 }
 
-export const NEW_BPMN_SCHEMA: Schema = {
+export const NEW_BPMN_DIAGRAM: BpmDiagram = {
     id: '',
     name: '',
     description: '',
@@ -36,7 +36,7 @@ export const NEW_BPMN_SCHEMA: Schema = {
     processDefinitions: 'process',
 
 };
-export const NEW_DMN_SCHEMA: Schema = {
+export const NEW_DMN_DIAGRAM: BpmDiagram = {
     id: '',
     name: '',
     description: '',
@@ -56,7 +56,7 @@ export const NEW_DMN_SCHEMA: Schema = {
     processDefinitions: '',
 };
 
-export const NEW_CMMN_SCHEMA: Schema = {
+export const NEW_CMMN_DIAGRAM: BpmDiagram = {
     id: '',
     name: '',
     description: '',

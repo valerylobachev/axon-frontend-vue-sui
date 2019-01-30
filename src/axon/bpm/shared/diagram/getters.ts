@@ -1,8 +1,8 @@
 import {GetterTree} from 'vuex';
-import {SchemaState} from '@/axon/bpm/shared/schema/types';
+import {BpmDiagramState} from '@/axon/bpm/shared/diagram/types';
 import {RootState} from '@/annette/core/store/root-state';
 
-export const getters: GetterTree<SchemaState, RootState> = {
+export const getters: GetterTree<BpmDiagramState, RootState> = {
     filter: state => state.filter,
 
     failure: state => state.failure,

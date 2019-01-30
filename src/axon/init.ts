@@ -3,5 +3,5 @@ import {Store} from 'vuex';
 
 export function initStore(store: Store<RootState>) {
     console.log('initStore')
-    store.dispatch('bpmSchema/FindSchemas', '')
+    store.dispatch('bpmDiagram/Find', '')
 }

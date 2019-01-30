@@ -13,7 +13,7 @@ export default {
                 title: 'CONFIG',
                 bpm: {
                     title: 'BPM',
-                    schemas: 'Schemas',
+                    bpmDiagrams: 'Diagrams',
                     processes: 'Processes',
                 },
                 orgStructure: 'Org. Structure',
@@ -25,30 +25,30 @@ export default {
         },
         bpm: {
             md: {
-                schema: {
+                bpmDiagram: {
                     id: 'Id',
                     name: 'Name',
                     description: 'Description',
                     notation: 'Notation',
                     processDefinitions: 'Process Defs',
                     xml: 'XML',
-                    delete: 'Are you sure to delete schema {name}?',
+                    delete: 'Are you sure to delete diagram {name}?',
                 },
             },
             form: {
-                schemas: {
-                    title: 'Schemas',
+                bpmDiagrams: {
+                    title: 'BPM Diagrams',
                     actions: 'Actions',
                     createBPMN: 'Create BPMN',
                     createDMN: 'Create DMN',
                     createCMMN: 'Create CMMN',
                     filter: 'Filter',
-                    notFound: 'No schema has been found.',
+                    notFound: 'No diagram has been found.',
                 },
-                schemaForm: {
-                    createTitle: 'Create schema',
-                    viewTitle: 'View schema',
-                    editTitle: 'Edit schema',
+                bpmDiagramForm: {
+                    createTitle: 'Create BPM diagram',
+                    viewTitle: 'View BPM diagram',
+                    editTitle: 'Edit BPM diagram',
                     nameRequired: 'Name required',
                     xmlRequired: 'XML required',
                     infoTab: 'Info',

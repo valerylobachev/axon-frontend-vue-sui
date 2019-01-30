@@ -1,9 +1,9 @@
 <template>
     <app-form>
         <template slot="header">
-            <h3 v-if="action == 'create'">{{ $t('axon.bpm.form.schemaForm.createTitle') }}</h3>
-            <h3 v-else-if="action == 'view'">{{ $t('axon.bpm.form.schemaForm.viewTitle') }}</h3>
-            <h3 v-else-if="action == 'edit'">{{ $t('axon.bpm.form.schemaForm.editTitle') }}</h3>
+            <h3 v-if="action == 'create'">{{ $t('axon.bpm.form.bpmDiagramForm.createTitle') }}</h3>
+            <h3 v-else-if="action == 'view'">{{ $t('axon.bpm.form.bpmDiagramForm.viewTitle') }}</h3>
+            <h3 v-else-if="action == 'edit'">{{ $t('axon.bpm.form.bpmDiagramForm.editTitle') }}</h3>
         </template>
 
         <template slot="toolbar">
@@ -15,28 +15,28 @@
                     {{ $t('axon.shared.saved') }}
                 </div>
                 <div class="ui red label"
-                     v-if="schema.name.trim().length == 0 && action !== 'view'">
-                    {{ $t('axon.bpm.form.schemaForm.nameRequired') }}
+                     v-if="(!bpmDiagram.name || bpmDiagram.name.trim().length == 0) && action !== 'view'">
+                    {{ $t('axon.bpm.form.bpmDiagramForm.nameRequired') }}
                 </div>
-                <div class="ui red label" v-if="schema.xml.trim().length == 0 && action !== 'view'">
-                    {{ $t('axon.bpm.form.schemaForm.xmlRequired') }}
+                <div class="ui red label" v-if="!bpmDiagram.xml || bpmDiagram.xml.trim().length == 0 && action !== 'view'">
+                    {{ $t('axon.bpm.form.bpmDiagramForm.xmlRequired') }}
                 </div>
             </div>
             <div class="six wide computer column eight wide tablet column">
                 <div class="ui right floated header">
                     <router-link class="ui basic button"
-                                 to="../../schemas"
+                                 to="../../diagrams"
                                  :class="{ disabled: isDirty }">
-                        {{ $t('axon.bpm.form.schemas.title') }}
+                        {{ $t('axon.bpm.form.bpmDiagrams.title') }}
                     </router-link>
                     <router-link class="ui basic button"
                                  v-if="action == 'view'"
-                                 :to="`../../schema/edit/${id}`">
+                                 :to="`../../diagram/edit/${id}`">
                         {{ $t('axon.shared.edit') }}
                     </router-link>
                     <router-link class="ui basic button"
                                  v-if="action == 'edit'"
-                                 :to="`../../schema/view/${id}`"
+                                 :to="`../../diagram/view/${id}`"
                                  :class="{ disabled: isDirty }">
                         {{ $t('axon.shared.view') }}
                     </router-link>
@@ -61,57 +61,57 @@
 
                 <sui-tab style="height: 100%" :menu="{ pointing: true, secondary: true }">
                     <!--:menu="{ pointing: true, secondary: true }"-->
-                    <sui-tab-pane :title="$t('axon.bpm.form.schemaForm.infoTab')">
+                    <sui-tab-pane :title="$t('axon.bpm.form.bpmDiagramForm.infoTab')">
 
                         <div class="field">
                             <!--[class.error]="!nameControl.valid && nameControl.touched"-->
-                            <label>{{ $t('axon.bpm.md.schema.name') }}</label>
+                            <label>{{ $t('axon.bpm.md.bpmDiagram.name') }}</label>
                             <input type="text" name="name"
-                                   v-model="schema.name"
+                                   v-model="bpmDiagram.name"
                                    :readOnly="action == 'view'">
                             <div class="ui error message"
-                                 v-if="!(this.schema.name && this.schema.name.length > 0)">
-                                {{ $t('axon.bpm.form.schemaForm.nameRequired') }}
+                                 v-if="!(this.bpmDiagram.name && this.bpmDiagram.name.length > 0)">
+                                {{ $t('axon.bpm.form.bpmDiagramForm.nameRequired') }}
                             </div>
                         </div>
                         <div class="field">
-                            <label>{{ $t('axon.bpm.md.schema.description') }}</label>
+                            <label>{{ $t('axon.bpm.md.bpmDiagram.description') }}</label>
                             <textarea name="description"
-                                      v-model="schema.description"
+                                      v-model="bpmDiagram.description"
                                       :readOnly="action == 'view'"></textarea>
                         </div>
                         <div class="field">
-                            <label>{{ $t('axon.bpm.md.schema.notation') }}</label>
-                            <div class="ui blue label">{{ schema.notation }}</div>
+                            <label>{{ $t('axon.bpm.md.bpmDiagram.notation') }}</label>
+                            <div class="ui blue label">{{ bpmDiagram.notation }}</div>
                         </div>
-                        <div class="field" v-if="schema.notation === 'BPMN'">
-                            <label>{{ $t('axon.bpm.md.schema.processDefinitions') }}</label>
-                            <process-def-list :value="schema.processDefinitions"></process-def-list>
+                        <div class="field" v-if="bpmDiagram.notation === 'BPMN'">
+                            <label>{{ $t('axon.bpm.md.bpmDiagram.processDefinitions') }}</label>
+                            <process-def-list :value="bpmDiagram.processDefinitions"></process-def-list>
                         </div>
                     </sui-tab-pane>
-                    <sui-tab-pane :title="$t('axon.bpm.form.schemaForm.designerTab')">
+                    <sui-tab-pane :title="$t('axon.bpm.form.bpmDiagramForm.designerTab')">
                         <div class="reset-padding">
-                            <bpmn-edit v-if="schema.notation === 'BPMN' && action === 'edit'"
-                                       v-model="schema.xml"
-                                       @processDefinitions="schema.processDefinitions = $event"></bpmn-edit>
-                            <bpmn-view v-if="schema.notation === 'BPMN' && action === 'view'"
-                                       v-model="schema.xml"></bpmn-view>
-                            <dmn-view v-if="schema.notation === 'DMN' && action === 'view'"
-                                      v-model="schema.xml"></dmn-view>
-                            <cmmn-view v-if="schema.notation === 'CMMN' && action === 'view'"
-                                       v-model="schema.xml"></cmmn-view>
+                            <bpmn-edit v-if="bpmDiagram.notation === 'BPMN' && (action === 'edit' || action === 'create')"
+                                       v-model="bpmDiagram.xml"
+                                       @processDefinitions="bpmDiagram.processDefinitions = $event"></bpmn-edit>
+                            <bpmn-view v-if="bpmDiagram.notation === 'BPMN' "
+                                       v-model="bpmDiagram.xml"></bpmn-view>
+                            <dmn-view v-if="bpmDiagram.notation === 'DMN' "
+                                      v-model="bpmDiagram.xml"></dmn-view>
+                            <cmmn-view v-if="bpmDiagram.notation === 'CMMN' "
+                                       v-model="bpmDiagram.xml"></cmmn-view>
                         </div>
                     </sui-tab-pane>
 
-                    <sui-tab-pane :title="$t('axon.bpm.form.schemaForm.xmlTab')">
+                    <sui-tab-pane :title="$t('axon.bpm.form.bpmDiagramForm.xmlTab')">
                         <div class="field">
                             <!--:class=" {error: !xmlControl.valid && xmlControl.touched} "-->
-                            <textarea class="xml-edit" name="xml" :placeholder="$t('axon.bpm.md.schema.xml')"
-                                      v-model="schema.xml"
+                            <textarea class="xml-edit" name="xml" :placeholder="$t('axon.bpm.md.bpmDiagram.xml')"
+                                      v-model="bpmDiagram.xml"
                                       :readOnly="action == 'view'"></textarea>
                             <div class="ui error message"
-                                 v-if="!(this.schema.description && this.schema.description.length > 0)">
-                                {{ $t('axon.bpm.form.schemaForm.xmlRequired') }}
+                                 v-if="!(this.bpmDiagram.description && this.bpmDiagram.description.length > 0)">
+                                {{ $t('axon.bpm.form.bpmDiagramForm.xmlRequired') }}
                             </div>
                         </div>
                     </sui-tab-pane>
@@ -126,7 +126,7 @@
 <script lang="ts">
     import {Component, Vue, Watch} from 'vue-property-decorator';
     import ProcessDefList from '@/axon/bpm/config/ProcessDefList.vue';
-    import {NEW_BPMN_SCHEMA, Schema} from '@/axon/bpm/shared/schema/schema.model';
+    import {NEW_BPMN_DIAGRAM, BpmDiagram} from '@/axon/bpm/shared/diagram/model';
     import {Action, Getter} from 'vuex-class';
     import BpmnEdit from '@/axon/bpm/config/bpmn/BpmnEdit.vue';
     import AppForm from '@/annette/layout/AppForm.vue';
@@ -134,7 +134,7 @@
     import DmnView from '@/axon/bpm/config/bpmn/DmnView.vue';
     import CmmnView from '@/axon/bpm/config/bpmn/CmmnView.vue';
 
-    const namespace = 'bpmSchema';
+    const namespace = 'bpmDiagram';
 
     @Component({
         components: {
@@ -146,8 +146,8 @@
             DmnView,
         },
     })
-    export default class SchemaForm extends Vue {
-        schema: Schema = NEW_BPMN_SCHEMA;
+    export default class BpmDiagramForm extends Vue {
+        bpmDiagram: BpmDiagram = NEW_BPMN_DIAGRAM;
 
         action = 'view';
         id = '';
@@ -156,47 +156,45 @@
         @Getter('failure', {namespace}) failure;
         @Getter('entity', {namespace}) entity;
         @Getter('saved', {namespace}) saved;
-        @Action('InitSchema', {namespace}) initSchema: any;
-        @Action('CreateSchema', {namespace}) createSchema: any;
-        @Action('UpdateSchema', {namespace}) updateSchema: any;
+        @Action('Init', {namespace}) initBpmDiagram: any;
+        @Action('Create', {namespace}) createBpmDiagram: any;
+        @Action('Update', {namespace}) updateBpmDiagram: any;
 
 
         @Watch('entity')
-        onEntityChange(val: Schema, oldVal: Schema) {
-            this.schema = {...val};
+        onEntityChange(val: BpmDiagram, oldVal: BpmDiagram) {
+            this.bpmDiagram = {...val};
         }
 
         @Watch('$route', {immediate: true, deep: true})
         onRouteChange(to, from) {
-            const actKey = 'action';
-            const idKey = 'id';
-            this.action = to.params[actKey];
-            this.id = to.params[idKey];
-            this.initSchema({mode: this.action, id: this.id});
+            this.action = to.params.action;
+            this.id = to.params.id;
+            this.initBpmDiagram({mode: this.action, id: this.id});
 
         }
 
         save() {
             if (this.action === 'create') {
-                this.createSchema(this.schema);
+                this.createBpmDiagram(this.bpmDiagram);
             } else if (this.action === 'edit') {
-                this.updateSchema(this.schema);
+                this.updateBpmDiagram(this.bpmDiagram);
             }
         }
 
         get isDirty() {
-            if (this.entity && this.schema) {
-                return this.schema.name !== this.entity.name ||
-                    this.schema.description !== this.entity.description ||
-                    this.schema.xml !== this.entity.xml;
+            if (this.entity && this.bpmDiagram) {
+                return this.bpmDiagram.name !== this.entity.name ||
+                    this.bpmDiagram.description !== this.entity.description ||
+                    this.bpmDiagram.xml !== this.entity.xml;
             } else {
                 return false;
             }
         }
 
         get isValid() {
-            return this.schema.name && this.schema.name.length > 0 &&
-                this.schema.xml && this.schema.xml.length > 0;
+            return this.bpmDiagram.name && this.bpmDiagram.name.length > 0 &&
+                this.bpmDiagram.xml && this.bpmDiagram.xml.length > 0;
         }
     }
 </script>

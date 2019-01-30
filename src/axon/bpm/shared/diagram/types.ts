@@ -1,8 +1,8 @@
-import {Schema, SchemaSummary} from '@/axon/bpm/shared/schema/schema.model';
+import {BpmDiagram, BpmDiagramSummary} from '@/axon/bpm/shared/diagram/model';
 
-export interface SchemaState {
+export interface BpmDiagramState {
     ids: string[];
-    entities: { [id: string]: SchemaSummary };
+    entities: { [id: string]: BpmDiagramSummary };
 
     filter: string;
     entitiesLoading: boolean;
@@ -11,11 +11,11 @@ export interface SchemaState {
 
     sortField: string
     sortAscending: boolean
-    sortedEntities: SchemaSummary[]
+    sortedEntities: BpmDiagramSummary[]
 
     mode: string;
     id: string
-    entity: Schema;
+    entity: BpmDiagram;
 
     loading: boolean;
     loaded: boolean;
@@ -31,10 +31,10 @@ export interface InitOptions {
 
 export interface LoadOptions {
     mode: string,
-    schema: Schema
+    diagram: BpmDiagram
 }
 
 export interface UpdateOptions {
-    schema: Schema
-    summary: SchemaSummary
+    diagram: BpmDiagram
+    summary: BpmDiagramSummary
 }

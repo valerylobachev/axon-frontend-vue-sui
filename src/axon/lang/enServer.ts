@@ -1,7 +1,7 @@
 const enServerMessages =  {
     bpmRepository: {
-        schema: {
-            notFound: 'Schema not found',
+        bpmDiagram: {
+            notFound: 'BPM diagram not found',
         },
     },
 };
