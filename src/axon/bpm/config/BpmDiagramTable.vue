@@ -3,42 +3,42 @@
         <thead>
         <tr>
             <th @click="toggleSort('name')">
-                {{ $t('axon.bpm.md.schema.name') }}
+                {{ $t('axon.bpm.md.bpmDiagram.name') }}
                 <i class="sort up icon" v-if="isSortAscending('name')"></i>
                 <i class="sort down icon" v-if="isSortDescending('name')"></i>
             </th>
             <th @click="toggleSort('description')">
-                {{ $t('axon.bpm.md.schema.description') }}
+                {{ $t('axon.bpm.md.bpmDiagram.description') }}
                 <i class="sort up icon" v-if="isSortAscending('description') "></i>
                 <i class="sort down icon" v-if="isSortDescending('description')"></i>
             </th>
             <th @click="toggleSort('notation')">
-                {{ $t('axon.bpm.md.schema.notation') }}
+                {{ $t('axon.bpm.md.bpmDiagram.notation') }}
                 <i class="sort up icon" v-if="isSortAscending('notation')"></i>
                 <i class="sort down icon" v-if="isSortDescending('notation')"></i>
             </th>
             <th @click="toggleSort('processDefinitions')">
-                {{ $t('axon.bpm.md.schema.processDefinitions') }}
+                {{ $t('axon.bpm.md.bpmDiagram.processDefinitions') }}
                 <i class="sort up icon" v-if="isSortAscending('processDefinitions')"></i>
                 <i class="sort down icon" v-if="isSortDescending('processDefinitions')"></i>
             </th>
-            <th>{{ $t('axon.bpm.form.schemas.actions') }}</th>
+            <th>{{ $t('axon.bpm.form.bpmDiagrams.actions') }}</th>
         </tr>
         </thead>
         <tbody>
-        <tr v-for="schema in sortState.sortedEntities">
+        <tr v-for="bpmDiagram in sortState.sortedEntities">
             <td>
-                <router-link :to="`schema/view/${schema.id}`">{{ schema.name }}</router-link>
+                <router-link :to="`diagram/view/${bpmDiagram.id}`">{{ bpmDiagram.name }}</router-link>
             </td>
-            <td>{{ schema.description }}</td>
+            <td>{{ bpmDiagram.description }}</td>
             <td>
-                <div class="ui basic label">{{ schema.notation }}</div>
-            </td>
-            <td>
-                <process-def-list :value="schema.processDefinitions"></process-def-list>
+                <div class="ui basic label">{{ bpmDiagram.notation }}</div>
             </td>
             <td>
-                <slot v-bind:schema="schema"></slot>
+                <process-def-list :value="bpmDiagram.processDefinitions"></process-def-list>
+            </td>
+            <td>
+                <slot v-bind:bpmDiagram="bpmDiagram"></slot>
             </td>
         </tr>
         </tbody>
@@ -47,7 +47,7 @@
 
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
-    import {SchemaSummary} from '@/axon/bpm/shared/schema/schema.model';
+    import {BpmDiagramSummary} from '@/axon/bpm/shared/diagram/model';
     import ProcessDefList from '@/axon/bpm/config/ProcessDefList.vue';
 
     @Component({
@@ -55,7 +55,7 @@
             ProcessDefList,
         },
     })
-    export default class SchemaTable extends Vue {
+    export default class BpmDiagramTable extends Vue {
 
         @Prop(Object) sortState;
 
@@ -71,9 +71,9 @@
             return this.sortState.sortField === field && !this.sortState.sortAscending;
         }
 
-        processDefinitionsList(schema: SchemaSummary) {
-            if (schema && schema.processDefinitions && schema.processDefinitions.length > 0) {
-                return schema.processDefinitions.split(' ');
+        processDefinitionsList(bpmDiagram: BpmDiagramSummary) {
+            if (bpmDiagram && bpmDiagram.processDefinitions && bpmDiagram.processDefinitions.length > 0) {
+                return bpmDiagram.processDefinitions.split(' ');
             } else {
                 return [];
             }

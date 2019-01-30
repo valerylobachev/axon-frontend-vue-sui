@@ -1,7 +1,7 @@
 const ruServerMessages =  {
     bpmRepository: {
-        schema: {
-            notFound: 'Схема не найдена',
+        bpmDiagram: {
+            notFound: 'BPM модель не найдена',
         },
     },
 };

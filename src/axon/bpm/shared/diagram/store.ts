@@ -1,12 +1,12 @@
 import {Module} from 'vuex';
-import {SchemaState} from './types';
+import {BpmDiagramState} from './types';
 import {mutations} from './mutations';
 import {actions} from './actions';
 import {getters} from './getters';
 import {RootState} from '@/annette/core/store/root-state';
 
 
-export const state: SchemaState = {
+export const state: BpmDiagramState = {
     ids: [],
     entities: {},
 
@@ -33,7 +33,7 @@ export const state: SchemaState = {
 
 const namespaced: boolean = true;
 
-export const bpmSchema: Module<SchemaState, RootState> = {
+export const bpmDiagram: Module<BpmDiagramState, RootState> = {
     namespaced,
     state,
     mutations,

@@ -1,30 +1,30 @@
 import {MutationTree} from 'vuex';
-import {LoadOptions, SchemaState, UpdateOptions} from '@/axon/bpm/shared/schema/types';
-import {SchemaSummary} from '@/axon/bpm/shared/schema/schema.model';
+import {LoadOptions, BpmDiagramState, UpdateOptions} from '@/axon/bpm/shared/diagram/types';
+import {BpmDiagramSummary} from '@/axon/bpm/shared/diagram/model';
 import uuidv4 from 'uuid/v4';
 import {vm} from '@/main';
 
-export const mutations: MutationTree<SchemaState> = {
-    FindSchemas: (state: SchemaState, filter: string) => {
+export const mutations: MutationTree<BpmDiagramState> = {
+    Find: (state: BpmDiagramState, filter: string) => {
         state.entitiesLoading = true;
         state.filter = filter;
     },
-    FindSchemasSuccess: (state: SchemaState, schemas: SchemaSummary[]) => {
+    FindSuccess: (state: BpmDiagramState, diagrams: BpmDiagramSummary[]) => {
         state.entitiesLoading = false;
-        state.ids = schemas.map(s => s.id);
+        state.ids = diagrams.map(s => s.id);
         state.entities = {};
-        schemas.forEach(s => state.entities[s.id] = s);
+        diagrams.forEach(s => state.entities[s.id] = s);
         state.sortedEntities = sortEntities(state);
         state.failure = null;
     },
-    FindSchemasFailure: (state: SchemaState, failure: any) => {
+    FindFailure: (state: BpmDiagramState, failure: any) => {
         state.ids = [];
         state.entities = {};
         state.failure = failure;
         state.entitiesLoading = false;
         state.sortedEntities = [];
     },
-    ToggleSchemaSort: (state: SchemaState, field: string) => {
+    ToggleSort: (state: BpmDiagramState, field: string) => {
         switch (state.sortField) {
             case field: {
                 if (state.sortAscending) {
@@ -42,18 +42,19 @@ export const mutations: MutationTree<SchemaState> = {
         }
         state.sortedEntities = sortEntities(state);
     },
-    ClearFailure: (state: SchemaState) => {
+    ClearFailure: (state: BpmDiagramState) => {
         state.failure = null;
     },
 
-    LoadSchema: (state: SchemaState) => {
+    Load: (state: BpmDiagramState) => {
         state.failure = null;
         state.loading = true;
         state.loaded = false;
+        state.saved = false;
     },
 
-    LoadSchemaSuccess: (state: SchemaState, {mode, schema}: LoadOptions) => {
-        state.entity = {...schema};
+    LoadSuccess: (state: BpmDiagramState, {mode, diagram}: LoadOptions) => {
+        state.entity = {...diagram};
         if (mode === 'create') {
             state.entity.id = uuidv4()
         }
@@ -62,78 +63,78 @@ export const mutations: MutationTree<SchemaState> = {
         state.loaded = true;
     },
 
-    LoadSchemaFailure: (state: SchemaState, failure: any) => {
+    LoadFailure: (state: BpmDiagramState, failure: any) => {
         state.entity = null;
         state.failure = failure;
         state.loading = false;
         state.loaded = false;
     },
 
-    CreateSchema: (state: SchemaState) => {
+    Create: (state: BpmDiagramState) => {
         state.saving = true;
         state.failure = null;
         state.saved = false;
     },
 
-    CreateSchemaSuccess: (state: SchemaState, {schema, summary}: UpdateOptions) => {
+    CreateSuccess: (state: BpmDiagramState, {diagram, summary}: UpdateOptions) => {
         state.saving = false;
         state.failure = null;
         state.saved = true;
         state.entities[summary.id] = summary;
         state.ids = Object.keys(state.entities);
         state.sortedEntities = sortEntities(state);
-        state.entity = {...schema};
-        vm.$router.push(`/bpm-config/schema/update/${schema.id}`)
+        state.entity = {...diagram};
+        vm.$router.push(`/bpm-config/diagram/edit/${diagram.id}`)
     },
 
-    CreateSchemaFailure: (state: SchemaState, failure: any) => {
+    CreateFailure: (state: BpmDiagramState, failure: any) => {
         state.saving = false;
         state.failure = failure;
         state.saved = false;
     },
 
-    UpdateSchema: (state: SchemaState) => {
+    Update: (state: BpmDiagramState) => {
         state.saving = true;
         state.failure = null;
         state.saved = false;
     },
 
-    UpdateSchemaSuccess: (state: SchemaState, {schema, summary}: UpdateOptions) => {
+    UpdateSuccess: (state: BpmDiagramState, {diagram, summary}: UpdateOptions) => {
         state.saving = false;
         state.failure = null;
         state.saved = true;
         state.entities[summary.id] = summary;
         state.ids = Object.keys(state.entities);
         state.sortedEntities = sortEntities(state);
-        state.entity = {...schema};
+        state.entity = {...diagram};
     },
 
-    UpdateSchemaFailure: (state: SchemaState, failure: any) => {
+    UpdateFailure: (state: BpmDiagramState, failure: any) => {
         state.saving = false;
         state.failure = failure;
         state.saved = false;
     },
 
-    DeleteSchema: (state: SchemaState, id: string) => {
+    Delete: (state: BpmDiagramState, id: string) => {
         state.saving = true;
         state.failure = null;
     },
-    DeleteSchemaSuccess: (state: SchemaState, id: string) => {
+    DeleteSuccess: (state: BpmDiagramState, id: string) => {
         delete state.entities[id];
         state.ids = state.ids.filter(i => i !== id);
         state.sortedEntities = sortEntities(state);
         state.saving = false;
         state.failure = null;
     },
-    DeleteSchemaFailure: (state: SchemaState, failure: any) => {
+    DeleteFailure: (state: BpmDiagramState, failure: any) => {
         state.saving = false;
         state.failure = failure;
     },
 
 };
 
-function sortEntities(state: SchemaState): SchemaSummary[] {
-    const entities: SchemaSummary[] = state.ids.map(id => state.entities[id]);
+function sortEntities(state: BpmDiagramState): BpmDiagramSummary[] {
+    const entities: BpmDiagramSummary[] = state.ids.map(id => state.entities[id]);
     if (state.sortField) {
         return entities.sort(sortByField(state.sortField, state.sortAscending));
     } else {
@@ -142,7 +143,7 @@ function sortEntities(state: SchemaState): SchemaSummary[] {
 }
 
 function sortByField(field: string, ascending: boolean) {
-    return (aObj: SchemaSummary, bObj: SchemaSummary) => {
+    return (aObj: BpmDiagramSummary, bObj: BpmDiagramSummary) => {
         const a = (aObj[field] || '').toLowerCase();
         const b = (bObj[field] || '').toLowerCase();
         if (a < b) {

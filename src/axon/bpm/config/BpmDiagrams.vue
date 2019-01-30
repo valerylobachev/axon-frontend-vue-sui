@@ -1,12 +1,12 @@
 <template>
     <app-form>
 
-        <h3 slot="header" class="header">{{ $t('axon.bpm.form.schemas.title') }}</h3>
+        <h3 slot="header" class="header">{{ $t('axon.bpm.form.bpmDiagrams.title') }}</h3>
 
         <template slot="toolbar">
             <div class="ten wide column">
                 <div class="ui icon action input" style="width: 100%;">
-                    <input type="text" :placeholder="$t('axon.bpm.form.schemas.filter')"
+                    <input type="text" :placeholder="$t('axon.bpm.form.bpmDiagrams.filter')"
                            v-model="filter"
                            @input="setFilter($event.target.value)">
                     <i class=" close link icon"
@@ -19,16 +19,16 @@
             </div>
             <div class="right floated three wide column">
                 <div class="ui right floated primary buttons">
-                    <router-link class="ui primary button" to="schema/create/BPMN">
-                        {{ $t('axon.bpm.form.schemas.createBPMN')}}
+                    <router-link class="ui primary button" to="diagram/create/BPMN">
+                        {{ $t('axon.bpm.form.bpmDiagrams.createBPMN')}}
                     </router-link>
                     <sui-dropdown class="ui floating dropdown icon button">
                         <sui-dropdown-menu>
-                            <router-link class="item" to="schema/create/DMN">
-                                {{ $t('axon.bpm.form.schemas.createDMN')}}
+                            <router-link class="item" to="diagram/create/DMN">
+                                {{ $t('axon.bpm.form.bpmDiagrams.createDMN')}}
                             </router-link>
-                            <router-link class="item" to="schema/create/CMMN">
-                                {{ $t('axon.bpm.form.schemas.createCMMN')}}
+                            <router-link class="item" to="diagram/create/CMMN">
+                                {{ $t('axon.bpm.form.bpmDiagrams.createCMMN')}}
                             </router-link>
                         </sui-dropdown-menu>
                     </sui-dropdown>
@@ -47,29 +47,29 @@
             </div>
         </div>
         <div class="ui segment" v-if="!isEmpty">
-            <schema-table :sortState="sortState" @toggleSort="toggleSchemaSort">
+            <bpm-diagram-table :sortState="sortState" @toggleSort="toggleBpmDiagramSort">
                <template slot-scope="slotProps">
 
-                        <router-link class="ui tiny basic icon button" :to="`schema/create/${slotProps.schema.id}`">
+                        <router-link class="ui tiny basic icon button" :to="`diagram/create/${slotProps.bpmDiagram.id}`">
                             <i class="copy outline green icon"></i>
                         </router-link>
-                        <router-link class="ui tiny basic icon button" :to="`schema/edit/${slotProps.schema.id}`">
+                        <router-link class="ui tiny basic icon button" :to="`diagram/edit/${slotProps.bpmDiagram.id}`">
                             <i class="edit blue icon"></i>
                         </router-link>
                         <button class="ui tiny basic icon button"><i class="upload violet icon"></i>
                         </button>
                         <button class="ui tiny basic icon button"
-                                @click="requestDelete(slotProps.schema.id, slotProps.schema.name)">
+                                @click="requestDelete(slotProps.bpmDiagram.id, slotProps.bpmDiagram.name)">
                             <i class="delete red icon"></i>
                         </button>
 
                </template>
-            </schema-table>
+            </bpm-diagram-table>
         </div>
         <div class="ui placeholder segment" v-if="isEmpty">
             <div class="ui icon header">
                 <i class="object group outline icon"></i>
-                {{ $t('axon.bpm.form.schemas.notFound') }}
+                {{ $t('axon.bpm.form.bpmDiagrams.notFound') }}
             </div>
         </div>
 
@@ -77,7 +77,7 @@
         <sui-modal v-model="modalContext.open" size="tiny">
             <sui-modal-header>{{ $t('axon.shared.delete')}}</sui-modal-header>
             <sui-modal-content image>
-                <p>{{ $t('axon.bpm.md.schema.delete', {name: modalContext.name})}}?</p>
+                <p>{{ $t('axon.bpm.md.bpmDiagram.delete', {name: modalContext.name})}}?</p>
             </sui-modal-content>
             <sui-modal-actions>
                 <button class="ui basic button" @click="modalContext.open = false">{{ $t('axon.shared.cancel')}}
@@ -94,21 +94,20 @@
     import {Component, Vue, Watch} from 'vue-property-decorator';
     import {Action, Getter, Mutation} from 'vuex-class';
     import _ from 'lodash';
-    import {SchemaSummary} from '@/axon/bpm/shared/schema/schema.model';
     import AppForm from '@/annette/layout/AppForm.vue';
     import ProcessDefList from '@/axon/bpm/config/ProcessDefList.vue';
-    import SchemaTable from '@/axon/bpm/config/SchemaTable.vue';
+    import BpmDiagramTable from '@/axon/bpm/config/BpmDiagramTable.vue';
 
-    const namespace = 'bpmSchema';
+    const namespace = 'bpmDiagram';
 
     @Component({
         components: {
             AppForm,
             ProcessDefList,
-            SchemaTable,
+            BpmDiagramTable,
         },
     })
-    export default class Schemas extends Vue {
+    export default class BpmDiagrams extends Vue {
 
         filter: string = '';
         modalContext = {
@@ -117,14 +116,14 @@
             name: '',
         };
 
-        @Action('FindSchemas', {namespace}) find: any;
-        @Mutation('ToggleSchemaSort', {namespace}) toggleSchemaSort: any;
+        @Action('Find', {namespace}) find: any;
+        @Mutation('ToggleSort', {namespace}) toggleBpmDiagramSort: any;
         @Mutation('ClearFailure', {namespace}) clearFailure: any;
         @Getter('filter', {namespace}) filterState;
         @Getter('sortState', {namespace}) sortState;
         @Getter('failure', {namespace}) failure;
 
-        @Action('DeleteSchema', {namespace}) deleteSchema: any;
+        @Action('Delete', {namespace}) deleteBpmDiagram: any;
 
         lazyFind = _.debounce(f => {
                 this.find(f);
@@ -165,7 +164,7 @@
         }
 
         performDelete() {
-            this.deleteSchema(this.modalContext.id);
+            this.deleteBpmDiagram(this.modalContext.id);
             this.modalContext = {
                 open: false,
                 id: null,

@@ -13,7 +13,7 @@ export default {
                 title: 'КОНФИГУРАЦИЯ',
                 bpm: {
                     title: 'Бизнес процессы',
-                    schemas: 'Схемы',
+                    bpmDiagrams: 'Модели процессов',
                     processes: 'Процессы',
                 },
                 orgStructure: 'Орг. структура',
@@ -25,30 +25,30 @@ export default {
         },
         bpm: {
             md: {
-                schema: {
+                bpmDiagram: {
                     id: 'Ид',
                     name: 'Наименование',
                     description: 'Описание',
                     notation: 'Нотация',
                     processDefinitions: 'Определения процессов',
                     xml: 'XML',
-                    delete: 'Удалить схему {name}?',
+                    delete: 'Удалить модель {name}?',
                 },
             },
             form: {
-                schemas: {
-                    title: 'Схемы',
+                bpmDiagrams: {
+                    title: 'BPM модели',
                     actions: 'Действия',
                     createBPMN: 'Создать BPMN',
                     createDMN: 'Создать DMN',
                     createCMMN: 'Создать CMMN',
                     filter: 'Фильтр',
-                    notFound: 'Схемы не найдены',
+                    notFound: 'BPM модели не найдены',
                 },
-                schemaForm: {
-                    createTitle: 'Создание схемы',
-                    viewTitle: 'Просмотр схемы',
-                    editTitle: 'Изменение схемы',
+                bpmDiagramForm: {
+                    createTitle: 'Создание BPM модели',
+                    viewTitle: 'Просмотр BPM модели',
+                    editTitle: 'Изменение BPM модели',
                     nameRequired: 'Наименование обязательно',
                     xmlRequired: 'XML обязателен',
                     infoTab: 'Инфо',
