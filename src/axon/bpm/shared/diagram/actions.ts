@@ -5,6 +5,12 @@ import {RootState} from '@/annette/core/store/root-state';
 import {NEW_BPMN_DIAGRAM, NEW_CMMN_DIAGRAM, NEW_DMN_DIAGRAM, BpmDiagram} from '@/axon/bpm/shared/diagram/model';
 
 export const actions: ActionTree<BpmDiagramState, RootState> = {
+    InitFilter(context) {
+        if (!context.state.filterInitialized) {
+            context.dispatch('Find', '');
+        }
+    },
+
     Find(context, filter: string) {
         context.commit('Find', filter);
         bpmDiagramBackendService

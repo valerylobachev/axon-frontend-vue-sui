@@ -97,8 +97,9 @@
     import AppForm from '@/annette/layout/AppForm.vue';
     import ProcessDefList from '@/axon/bpm/config/ProcessDefList.vue';
     import BpmDiagramTable from '@/axon/bpm/config/BpmDiagramTable.vue';
+    import {BPM_DIAGRAM_NAMESPACE} from '@/axon/bpm/shared/diagram/store';
 
-    const namespace = 'bpmDiagram';
+    const namespace: string = BPM_DIAGRAM_NAMESPACE;
 
     @Component({
         components: {
@@ -116,6 +117,7 @@
             name: '',
         };
 
+        @Action('InitFilter', {namespace}) initFilter: any;
         @Action('Find', {namespace}) find: any;
         @Mutation('ToggleSort', {namespace}) toggleBpmDiagramSort: any;
         @Mutation('ClearFailure', {namespace}) clearFailure: any;
@@ -129,6 +131,16 @@
                 this.find(f);
             },
             500);
+
+        constructor() {
+            super();
+            this.initFilter();
+        }
+
+        created() {
+            if (this.filterState) { this.filter = this.filterState };
+        }
+
 
         @Watch('filterState')
         onFilterStateChanged(val: string, oldVal: string) {

@@ -18,15 +18,18 @@ export default {
                 },
                 orgStructure: 'Org. Structure',
                 forms: 'Forms',
-                knowledge: 'Knowledge',
-                projects: 'Projects',
+                knowledge: {
+                    title: 'Knowledge',
+                    dataSchemas: 'Data Schemas',
+                    processes: 'Processes',
+                },
             },
             admin: 'Admin',
         },
         bpm: {
             md: {
                 bpmDiagram: {
-                    id: 'Id',
+                    key: 'Id',
                     name: 'Name',
                     description: 'Description',
                     notation: 'Notation',
@@ -58,7 +61,52 @@ export default {
             },
 
         },
+        knowledge: {
+            md: {
+                dataSchema: {
+                    key: 'Key',
+                    name: 'Name',
+                    description: 'Description',
+                    baseSchemas: 'Base records',
+                    fields: 'Fields',
+                    delete: 'Are you sure to delete data schema {name}?',
+                },
+                dataSchemaField: {
+                    key: 'Key',
+                    name: 'Name',
+                    caption: 'Caption',
+                    datatype: 'Data type',
+                    value: 'Default value',
+                    elementDatatype: 'Element data type',
+                    delete: 'Are you sure to delete field {key} - {name}?',
+                },
+            },
+            form: {
+                dataSchemaList: {
+                    title: 'Data Schemas',
+                    actions: 'Actions',
+                    create: 'Create',
+                    filter: 'Filter',
+                    notFound: 'No data schema has been found.',
+                },
+                dataSchemaForm: {
+                    createTitle: 'Create data schema',
+                    viewTitle: 'View data schema',
+                    editTitle: 'Edit data schema',
+                    nameRequired: 'Name required',
+                    keyRequired: 'Key required',
+                    infoTab: 'Info',
+                    baseSchemasTab: 'Base schemas',
+                    fieldsTab: 'Fields',
+                },
+                dataSchemaModalSelector: {
+                    title: 'Select data schema',
+                },
+            },
+
+        },
         shared: {
+            create: 'Create',
             delete: 'Delete',
             cancel: 'Cancel',
             error: 'Error',

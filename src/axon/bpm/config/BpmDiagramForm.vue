@@ -8,17 +8,18 @@
 
         <template slot="toolbar">
             <div class="ten wide computer column eight wide tablet column">
-                <div class="ui green basic label" v-if="isDirty && action !== 'view'">
+                <div class="ui green basic label" v-if="isDirty && action !== 'view' && !loading">
                     {{ $t('axon.shared.changed') }}
                 </div>
-                <div class="ui green basic label" v-if="saved && !isDirty && action !== 'view'">
+                <div class="ui green basic label" v-if="saved && !isDirty && action !== 'view' && !loading">
                     {{ $t('axon.shared.saved') }}
                 </div>
                 <div class="ui red label"
-                     v-if="(!bpmDiagram.name || bpmDiagram.name.trim().length == 0) && action !== 'view'">
+                     v-if="(!bpmDiagram.name || bpmDiagram.name.trim().length == 0) && action !== 'view' && !loading">
                     {{ $t('axon.bpm.form.bpmDiagramForm.nameRequired') }}
                 </div>
-                <div class="ui red label" v-if="!bpmDiagram.xml || bpmDiagram.xml.trim().length == 0 && action !== 'view'">
+                <div class="ui red label"
+                     v-if="!bpmDiagram.xml || bpmDiagram.xml.trim().length == 0 && action !== 'view' && !loading">
                     {{ $t('axon.bpm.form.bpmDiagramForm.xmlRequired') }}
                 </div>
             </div>
@@ -133,8 +134,9 @@
     import BpmnView from '@/axon/bpm/config/bpmn/BpmnView.vue';
     import DmnView from '@/axon/bpm/config/bpmn/DmnView.vue';
     import CmmnView from '@/axon/bpm/config/bpmn/CmmnView.vue';
+    import {BPM_DIAGRAM_NAMESPACE} from '@/axon/bpm/shared/diagram/store';
 
-    const namespace = 'bpmDiagram';
+    const namespace: string = BPM_DIAGRAM_NAMESPACE;
 
     @Component({
         components: {
@@ -152,7 +154,7 @@
         action = 'view';
         id = '';
 
-        @Getter('loading', {namespace}) loading;
+        @Getter('loading', {namespace}) loading = true;
         @Getter('failure', {namespace}) failure;
         @Getter('entity', {namespace}) entity;
         @Getter('saved', {namespace}) saved;
@@ -171,7 +173,6 @@
             this.action = to.params.action;
             this.id = to.params.id;
             this.initBpmDiagram({mode: this.action, id: this.id});
-
         }
 
         save() {

@@ -1,8 +1,8 @@
-import {BpmDiagram, BpmDiagramSummary} from '@/axon/bpm/shared/diagram/model';
+import {DataSchema, DataSchemaSummary} from './model';
 
-export interface BpmDiagramState {
-    ids: string[];
-    entities: { [id: string]: BpmDiagramSummary };
+export interface DataSchemaState {
+    keys: string[];
+    entities: { [key: string]: DataSchemaSummary };
 
     filterInitialized: boolean;
     filter: string;
@@ -12,11 +12,11 @@ export interface BpmDiagramState {
 
     sortField: string
     sortAscending: boolean
-    sortedEntities: BpmDiagramSummary[]
+    sortedEntities: DataSchemaSummary[]
 
     mode: string;
-    id: string
-    entity: BpmDiagram;
+    key: string
+    entity: DataSchema;
 
     loading: boolean;
     loaded: boolean;
@@ -27,15 +27,15 @@ export interface BpmDiagramState {
 
 export interface InitOptions {
     mode: string,
-    id: string
+    key: string
 }
 
 export interface LoadOptions {
     mode: string,
-    diagram: BpmDiagram
+    schema: DataSchema
 }
 
 export interface UpdateOptions {
-    diagram: BpmDiagram
-    summary: BpmDiagramSummary
+    schema: DataSchema
+    summary: DataSchemaSummary
 }

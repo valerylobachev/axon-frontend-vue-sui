@@ -32,7 +32,7 @@ const axonRoutes =  [
         children: [
             {
                 path: 'diagrams',
-                component: () => import(/* webpackChunkName: "bpm-config" */'./bpm/config/BpmDiagrams.vue'),
+                component: () => import(/* webpackChunkName: "bpm-config" */'./bpm/config/BpmDiagramList.vue'),
                 name: 'diagrams',
             },
             {
@@ -43,9 +43,29 @@ const axonRoutes =  [
         ],
     },
     {
+        path: '/knowledge-config',
+        name: 'knowledge-config',
+        component: HomeLayout,
+        redirect: '/knowledge-config/schemas',
+        children: [
+            {
+                path: 'schemas',
+                component: () =>
+                    import(/* webpackChunkName: "knowledge-config" */'./knowledge/config/DataSchemaList.vue'),
+                name: 'schemas',
+            },
+            {
+                path: 'schema/:action/:key',
+                component: () =>
+                    import(/* webpackChunkName: "knowledge-config" */'./knowledge/config/DataSchemaForm.vue'),
+                name: 'schema',
+            },
+        ],
+    },
+    {
         path: '*',
         redirect: '/bpm/tasks',
     },
-]
+];
 
 export default axonRoutes;

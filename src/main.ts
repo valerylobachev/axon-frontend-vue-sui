@@ -12,7 +12,6 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 import i18n from './lang';
-import {initStore} from '@/axon/init';
 import {sync} from 'vuex-router-sync';
 import './registerServiceWorker'
 
@@ -26,8 +25,6 @@ authService.init()
     .then(result => {
         Vue.config.productionTip = false;
         Vue.use(SuiVue);
-        // sync(store, router);
-        initStore(store);
         vm = new Vue({
             router,
             store,

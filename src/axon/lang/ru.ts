@@ -26,7 +26,7 @@ export default {
         bpm: {
             md: {
                 bpmDiagram: {
-                    id: 'Ид',
+                    key: 'Ид',
                     name: 'Наименование',
                     description: 'Описание',
                     notation: 'Нотация',
@@ -54,6 +54,35 @@ export default {
                     infoTab: 'Инфо',
                     designerTab: 'Дизайнер',
                     xmlTab: 'XML',
+                },
+            },
+
+        },
+        knowledge: {
+            md: {
+                dataSchema: {
+                    key: 'Ключ',
+                    name: 'Наименование',
+                    description: 'Описание',
+                    baseSchemas: 'Базовые схемы',
+                    fields: 'Позиции',
+                    delete: 'Удалить схему данных {name}?',
+                },
+            },
+            form: {
+                dataSchemaList: {
+                    title: 'Схема данных',
+                    actions: 'Действия',
+                    create: 'Создать',
+                    filter: 'Фильтр',
+                    notFound: 'Схемы данных не найдены.',
+                },
+                dataSchemaForm: {
+                    createTitle: 'Создание схемы данных',
+                    viewTitle: 'Просмотр схемы данных',
+                    editTitle: 'Изменение схемы данных',
+                    nameRequired: 'Наименование обязательно',
+                    keyRequired: 'Ключ обязателен',
                 },
             },
 

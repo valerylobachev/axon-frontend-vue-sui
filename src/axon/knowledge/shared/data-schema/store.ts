@@ -1,13 +1,13 @@
 import {Module} from 'vuex';
-import {BpmDiagramState} from './types';
+import {DataSchemaState} from './types';
 import {mutations} from './mutations';
 import {actions} from './actions';
 import {getters} from './getters';
 import {RootState} from '@/annette/core/store/root-state';
 
 
-export const state: BpmDiagramState = {
-    ids: [],
+export const state: DataSchemaState = {
+    keys: [],
     entities: {},
 
     filterInitialized: false,
@@ -21,7 +21,7 @@ export const state: BpmDiagramState = {
     sortedEntities: [],
 
     mode: null,
-    id: null,
+    key: null,
     entity: null,
 
     loading: false,
@@ -34,11 +34,20 @@ export const state: BpmDiagramState = {
 
 const namespaced: boolean = true;
 
-export const BPM_DIAGRAM_NAMESPACE: string = 'bpmDiagram';
+export const KNOWLEDGE_DATA_SCHEMA_NAMESPACE: string = 'knowledgeDataSchema';
+export const KNOWLEDGE_DATA_SCHEMA_SELECTOR_NAMESPACE: string = 'knowledgeDataSchemaSelector';
 
-export const bpmDiagram: Module<BpmDiagramState, RootState> = {
+export const knowledgeDataSchema: Module<DataSchemaState, RootState> = {
     namespaced,
-    state,
+    state: {...state},
+    mutations,
+    actions,
+    getters,
+};
+
+export const knowledgeDataSchemaSelector: Module<DataSchemaState, RootState> = {
+    namespaced,
+    state: {...state},
     mutations,
     actions,
     getters,
