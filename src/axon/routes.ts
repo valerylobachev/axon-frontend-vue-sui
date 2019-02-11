@@ -1,6 +1,6 @@
 import HomeLayout from '@/axon/utils/HomeLayout.vue';
 
-const axonRoutes =  [
+const axonRoutes = [
     {
         path: '',
         name: 'home',
@@ -32,13 +32,33 @@ const axonRoutes =  [
         children: [
             {
                 path: 'diagrams',
-                component: () => import(/* webpackChunkName: "bpm-config" */'./bpm/config/BpmDiagramList.vue'),
+                component: () =>
+                    import(/* webpackChunkName: "bpm-config" */'./bpm/config/bpm-diagram/BpmDiagramList.vue'),
                 name: 'diagrams',
             },
             {
                 path: 'diagram/:action/:id',
-                component: () => import(/* webpackChunkName: "bpm-config" */'./bpm/config/BpmDiagramForm.vue'),
+                component: () =>
+                    import(/* webpackChunkName: "bpm-config" */'./bpm/config/bpm-diagram/BpmDiagramForm.vue'),
                 name: 'diagram',
+            },
+            {
+                path: 'processDefs',
+                component: () =>
+                    import(/* webpackChunkName: "bpm-config" */'./bpm/config/deployment/ProcessDefList.vue'),
+                name: 'processDefs',
+            },
+            {
+                path: 'business-processes',
+                component: () =>
+                    import(/* webpackChunkName: "bpm-config" */'./bpm/config/process/BusinessProcessList.vue'),
+                name: 'business-processes',
+            },
+            {
+                path: 'business-process/:action/:id',
+                component: () =>
+                    import(/* webpackChunkName: "bpm-config" */'./bpm/config/process/BusinessProcessForm.vue'),
+                name: 'business-process',
             },
         ],
     },

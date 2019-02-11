@@ -31,9 +31,8 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
-import {    DataSchemaField, DataSchemaFields,
-    Datatype, DataSchemaSummary} from '@/axon/knowledge/shared/data-schema/model';
-import DataSchemaModalSelector from './DataSchemaModalSelector.vue';
+import { Datatype, DataSchemaSummary} from '@/axon/knowledge/shared/data-schema/model';
+import DataSchemaModalSelector from '@/axon/knowledge/shared/components/DataSchemaModalSelector.vue';
 
 const TYPE_OPTIONS = [
     { value: 'string', text: 'String' },

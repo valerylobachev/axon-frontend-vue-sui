@@ -2,7 +2,7 @@
     <table class="ui selectable fixed single line striped table">
         <thead>
             <tr>
-                <th @click="toggleSort('name')">
+                <th @click="toggleSort('key')">
                     {{ $t('axon.knowledge.md.dataSchema.key') }}
                     <i
                         class="sort up icon"
@@ -27,7 +27,7 @@
                     <i class="sort down icon" v-if="isSortDescending('description')"></i>
                 </th>
 
-                <th v-if="!selection">{{ $t('axon.knowledge.form.dataSchemaList.actions') }}</th>
+                <th v-if="!selection" style="width: 9em;">{{ $t('axon.knowledge.form.dataSchemaList.actions') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -79,6 +79,8 @@ export default class DataSchemaTable extends Vue {
     selectDataSchema(dataSchema) {
         if (this.selection) {
             this.$emit('select', dataSchema)
+        } else {
+            this.$router.push(`/knowledge-config/schema/view/${dataSchema.key}`)
         }
     }
 }

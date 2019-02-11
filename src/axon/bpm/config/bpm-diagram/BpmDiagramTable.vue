@@ -22,7 +22,7 @@
                 <i class="sort up icon" v-if="isSortAscending('processDefinitions')"></i>
                 <i class="sort down icon" v-if="isSortDescending('processDefinitions')"></i>
             </th>
-            <th>{{ $t('axon.bpm.form.bpmDiagrams.actions') }}</th>
+            <th style="width: 12em;">{{ $t('axon.bpm.form.bpmDiagrams.actions') }}</th>
         </tr>
         </thead>
         <tbody>
@@ -48,7 +48,7 @@
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
     import {BpmDiagramSummary} from '@/axon/bpm/shared/diagram/model';
-    import ProcessDefList from '@/axon/bpm/config/ProcessDefList.vue';
+    import ProcessDefList from './ProcessDefLabels.vue';
 
     @Component({
         components: {

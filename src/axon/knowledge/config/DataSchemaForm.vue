@@ -69,7 +69,7 @@
                  v-if="failure">
                 <p>{{ $t(failure.code, failure) }}</p>
             </div>
-            <form class="ui form">
+            <div class="ui form">
                 <!--:class="{ error: !formGroup.valid && formGroup.touched }"-->
                 <sui-tab style="height: 100%" :menu="{ pointing: true, secondary: true }">
                     <!--:menu="{ pointing: true, secondary: true }"-->
@@ -117,7 +117,7 @@
 
                     </sui-tab-pane>
                 </sui-tab>
-            </form>
+            </div>
         </div>
 
     </app-form>

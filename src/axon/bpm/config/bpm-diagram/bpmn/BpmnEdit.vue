@@ -24,31 +24,41 @@
 
         @Prop(String) value: string;
 
+        lastExportedXml = null;
+
 
         exportXml = _.debounce(this.debouncedExportXml, 500);
 
         @Watch('value')
         onValueChange(newXml) {
-            this.importXml(newXml);
+            console.log('onValueChange');
+            if (this.lastExportedXml !== newXml) {
+                console.log('value changed, import xml');
+                this.importXml(newXml);
+            }
         }
 
         debouncedExportXml() {
+            console.log('debouncedExportXml');
+
             this.modeler.saveXML((err, xml) => {
                 if (err) {
                     console.error('BPMN export error');
+                    console.error(err);
                 } else {
                     const ids = this.modeler._definitions.rootElements
                         .filter(el => el.$type === 'bpmn:Process')
                         .map(el => el.id).join(' ');
-                    console.log(ids);
+                    this.lastExportedXml = xml;
                     this.$emit('input', xml);
-                    this.$emit('processDefinitions', ids)
+                    this.$emit('processDefinitions', ids);
                 }
 
             });
         }
 
         mounted() {
+            console.log('mounted')
             const selector = document.querySelector('#canvas');
             const properties = document.querySelector('#properties');
             this.modeler = new Modeler({
@@ -79,6 +89,7 @@
                 this.modeler.importXML(xml, err => {
                     if (err) {
                         console.error('BPMN import error');
+                        console.error(err);
                     } else {
                         console.log('bpmn import ok');
                     }
@@ -119,6 +130,5 @@
         overflow: auto;
         background-color: rgb(248, 248, 248);
     }
-
 
 </style>

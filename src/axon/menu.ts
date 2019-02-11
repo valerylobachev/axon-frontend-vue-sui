@@ -14,7 +14,13 @@ export const MENU: MenuModel[] = [
                 state: '/bpm-config/diagrams', name: 'axon.menu.config.bpm.bpmDiagrams',
                 type: 'link', icon: 'object group outline',
             },
-            {state: '/bpm-config/processes', name: 'axon.menu.config.bpm.processes', type: 'link', icon: 'list'},
+            {state: '/bpm-config/processDefs', name: 'axon.menu.config.bpm.processDefs', type: 'link', icon: 'list'},
+            {
+                state: '/bpm-config/business-processes',
+                name: 'axon.menu.config.bpm.processes',
+                type: 'link',
+                icon: 'list',
+            },
         ],
     },
     {

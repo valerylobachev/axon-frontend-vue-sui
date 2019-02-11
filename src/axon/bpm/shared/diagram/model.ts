@@ -18,10 +18,10 @@ export const NEW_BPMN_DIAGRAM: BpmDiagram = {
     xml: '<?xml version="1.0" encoding="UTF-8"?>\n' +
         '<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" ' +
         'xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" ' +
+        'xmlns:camunda="http://camunda.org/schema/1.0/bpmn" ' +
         'xmlns:di="http://www.omg.org/spec/DD/20100524/DI" ' +
         'xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" ' +
-        'id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" ' +
-        'exporter="Camunda Modeler" exporterVersion="1.11.3">\n' +
+        'id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" >\n' +
         '  <bpmn:process id="process" isExecutable="true">\n' +
         '    <bpmn:startEvent id="StartEvent_1" />\n' +
         '  </bpmn:process>\n' +

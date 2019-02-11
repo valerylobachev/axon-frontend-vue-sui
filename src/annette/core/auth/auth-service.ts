@@ -31,9 +31,9 @@ function accountManagement() {
 
 
 function authGuard(to, from, next) {
-    console.log('router.beforeEach')
-    console.log(from)
-    console.log(to)
+    // console.log('router.beforeEach')
+    // console.log(from)
+    // console.log(to)
     if (!keycloak.authenticated) {
         console.log('Keycloak logging in');
         keycloak.login()
@@ -49,7 +49,7 @@ function authGuard(to, from, next) {
                 console.log(failure);
             });
     } else {
-        console.log('router.beforeEach: already authenticated')
+        // console.log('router.beforeEach: already authenticated')
         next()
     }
 }

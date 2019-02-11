@@ -14,7 +14,8 @@ export default {
                 bpm: {
                     title: 'BPM',
                     bpmDiagrams: 'Diagrams',
-                    processes: 'Processes',
+                    processDefs: 'Process Definitions',
+                    processes: 'Business Processes',
                 },
                 orgStructure: 'Org. Structure',
                 forms: 'Forms',
@@ -23,19 +24,36 @@ export default {
                     dataSchemas: 'Data Schemas',
                     processes: 'Processes',
                 },
+                projects: 'Projects',
             },
             admin: 'Admin',
         },
         bpm: {
             md: {
                 bpmDiagram: {
-                    key: 'Id',
+                    id: 'Id',
                     name: 'Name',
                     description: 'Description',
                     notation: 'Notation',
                     processDefinitions: 'Process Defs',
                     xml: 'XML',
                     delete: 'Are you sure to delete diagram {name}?',
+                },
+                processDef: {
+                    key: 'Key',
+                    name: 'Name',
+                    description: 'Description',
+                    version: 'Version',
+                    delete: 'Are you sure to delete diagram {name}?',
+                },
+                businessProcess: {
+                    id: 'Id',
+                    name: 'Name',
+                    description: 'Description',
+                    processReference: 'Process reference',
+                    dataSchemaKey: 'Data schema',
+                    defaults: 'Defaults',
+                    delete: 'Are you sure to delete business process {name}?',
                 },
             },
             form: {
@@ -47,6 +65,8 @@ export default {
                     createCMMN: 'Create CMMN',
                     filter: 'Filter',
                     notFound: 'No diagram has been found.',
+                    deployedTitle: 'Deployment',
+                    deployed: 'Diagram {name} successfully deployed.',
                 },
                 bpmDiagramForm: {
                     createTitle: 'Create BPM diagram',
@@ -57,6 +77,26 @@ export default {
                     infoTab: 'Info',
                     designerTab: 'Designer',
                     xmlTab: 'XML',
+                },
+                processDefList: {
+                    title: 'Process definitions',
+                    notFound: 'No process definition has been found.',
+                    latest: 'Latest versions',
+                },
+                businessProcessList: {
+                    title: 'Business Processes ',
+                    actions: 'Actions',
+                    create: 'Create',
+                    filter: 'Filter',
+                    notFound: 'No business process has been found.',
+                },
+                businessProcessForm: {
+                    createTitle: 'Create business process',
+                    viewTitle: 'View business process',
+                    editTitle: 'Edit business process',
+                    nameRequired: 'Name required',
+                    infoTab: 'Info',
+                    defaultsTab: 'Default Values',
                 },
             },
 
@@ -115,6 +155,9 @@ export default {
             view: 'View',
             saved: 'Saved',
             changed: 'Changed',
+            ok: 'Ok',
+            clear: 'Clear',
+            find: 'Find',
         },
     },
 

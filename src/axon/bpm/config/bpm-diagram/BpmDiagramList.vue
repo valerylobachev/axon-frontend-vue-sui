@@ -48,22 +48,26 @@
         </div>
         <div class="ui segment" v-if="!isEmpty">
             <bpm-diagram-table :sortState="sortState" @toggleSort="toggleBpmDiagramSort">
-               <template slot-scope="slotProps">
+                <template slot-scope="slotProps">
 
-                        <router-link class="ui tiny basic icon button" :to="`diagram/create/${slotProps.bpmDiagram.id}`">
-                            <i class="copy outline green icon"></i>
-                        </router-link>
-                        <router-link class="ui tiny basic icon button" :to="`diagram/edit/${slotProps.bpmDiagram.id}`">
-                            <i class="edit blue icon"></i>
-                        </router-link>
-                        <button class="ui tiny basic icon button"><i class="upload violet icon"></i>
-                        </button>
-                        <button class="ui tiny basic icon button"
-                                @click="requestDelete(slotProps.bpmDiagram.id, slotProps.bpmDiagram.name)">
-                            <i class="delete red icon"></i>
-                        </button>
+                    <router-link class="ui tiny basic icon button"
+                                 :to="`diagram/create/${slotProps.bpmDiagram.id}`">
+                        <i class="copy outline green icon"></i>
+                    </router-link>
+                    <router-link class="ui tiny basic icon button"
+                                 :to="`diagram/edit/${slotProps.bpmDiagram.id}`">
+                        <i class="edit blue icon"></i>
+                    </router-link>
+                    <button type="button" class="ui tiny basic icon button"
+                            @click="deploy(slotProps.bpmDiagram.id)"><i
+                            class="upload violet icon"></i>
+                    </button>
+                    <button type="button" class="ui tiny basic icon button"
+                            @click="requestDelete(slotProps.bpmDiagram.id, slotProps.bpmDiagram.name)">
+                        <i class="delete red icon"></i>
+                    </button>
 
-               </template>
+                </template>
             </bpm-diagram-table>
         </div>
         <div class="ui placeholder segment" v-if="isEmpty">
@@ -74,16 +78,25 @@
         </div>
 
 
-        <sui-modal v-model="modalContext.open" size="tiny">
+        <sui-modal v-model="deleteModalContext.open" size="tiny">
             <sui-modal-header>{{ $t('axon.shared.delete')}}</sui-modal-header>
             <sui-modal-content image>
-                <p>{{ $t('axon.bpm.md.bpmDiagram.delete', {name: modalContext.name})}}?</p>
+                <p>{{ $t('axon.bpm.md.bpmDiagram.delete', {name: deleteModalContext.name})}}</p>
             </sui-modal-content>
             <sui-modal-actions>
-                <button class="ui basic button" @click="modalContext.open = false">{{ $t('axon.shared.cancel')}}
+                <button class="ui basic button" @click="deleteModalContext.open = false">{{ $t('axon.shared.cancel')}}
                 </button>
-                <button class="ui red button" @click="performDelete" autofocus>{{
-                    $t('axon.shared.delete')}}
+                <button class="ui red button" @click="performDelete" autofocus>{{ $t('axon.shared.delete')}}</button>
+            </sui-modal-actions>
+        </sui-modal>
+
+        <sui-modal v-model="deployModalContext.open" size="tiny">
+            <sui-modal-header>{{ $t('axon.bpm.form.bpmDiagrams.deployedTitle') }}</sui-modal-header>
+            <sui-modal-content image>
+                <p>{{ $t('axon.bpm.form.bpmDiagrams.deployed', {name: deployModalContext.name})}}</p>
+            </sui-modal-content>
+            <sui-modal-actions>
+                <button class="ui basic button" @click="deployModalContext.open = false">{{ $t('axon.shared.ok')}}
                 </button>
             </sui-modal-actions>
         </sui-modal>
@@ -95,9 +108,10 @@
     import {Action, Getter, Mutation} from 'vuex-class';
     import _ from 'lodash';
     import AppForm from '@/annette/layout/AppForm.vue';
-    import ProcessDefList from '@/axon/bpm/config/ProcessDefList.vue';
-    import BpmDiagramTable from '@/axon/bpm/config/BpmDiagramTable.vue';
+    import ProcessDefList from './ProcessDefLabels.vue';
+    import BpmDiagramTable from './BpmDiagramTable.vue';
     import {BPM_DIAGRAM_NAMESPACE} from '@/axon/bpm/shared/diagram/store';
+    import bpmDeploymentBackendService from '@/axon/bpm/shared/deployment/backend.service';
 
     const namespace: string = BPM_DIAGRAM_NAMESPACE;
 
@@ -108,12 +122,17 @@
             BpmDiagramTable,
         },
     })
-    export default class BpmDiagrams extends Vue {
+    export default class BpmDiagramList extends Vue {
 
         filter: string = '';
-        modalContext = {
+        deleteModalContext = {
             open: false,
             id: '',
+            name: '',
+        };
+
+        deployModalContext = {
+            open: false,
             name: '',
         };
 
@@ -138,9 +157,10 @@
         }
 
         created() {
-            if (this.filterState) { this.filter = this.filterState };
+            if (this.filterState) {
+                this.filter = this.filterState;
+            }
         }
-
 
         @Watch('filterState')
         onFilterStateChanged(val: string, oldVal: string) {
@@ -168,7 +188,7 @@
         }
 
         requestDelete(id: string, name: string) {
-            this.modalContext = {
+            this.deleteModalContext = {
                 open: true,
                 id,
                 name,
@@ -176,12 +196,23 @@
         }
 
         performDelete() {
-            this.deleteBpmDiagram(this.modalContext.id);
-            this.modalContext = {
+            this.deleteBpmDiagram(this.deleteModalContext.id);
+            this.deleteModalContext = {
                 open: false,
                 id: null,
                 name: null,
             };
+        }
+
+        deploy(id: string) {
+            bpmDeploymentBackendService.deploy(id).then(result => {
+                console.log('Deployment result:')
+                console.log(result);
+                this.deployModalContext = {
+                    open: true,
+                    name: result.name,
+                };
+            });
         }
     }
 </script>

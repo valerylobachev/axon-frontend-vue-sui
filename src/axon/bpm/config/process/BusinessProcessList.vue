@@ -1,14 +1,14 @@
 <template>
     <app-form>
 
-        <h3 slot="header" class="header">{{ $t('axon.knowledge.form.dataSchemaList.title') }}</h3>
+        <h3 slot="header" class="header">{{ $t('axon.bpm.form.businessProcessList.title') }}</h3>
 
         <template slot="toolbar">
             <div class="ten wide column">
                 <div class="ui icon action input" style="width: 100%;">
-                    <input type="text" :placeholder="$t('axon.knowledge.form.dataSchemaList.filter')"
-                           v-model="filter"
-                           @input="setFilter($event.target.value)">
+                    <input type="text" :placeholder="$t('axon.bpm.form.businessProcessList.filter')"
+                           v-model="filter.filter"
+                           @input="setFilter({filter: $event.target.value})">
                     <i class=" close link icon"
                        style="right: 2.6em; width: 2em;"
                        @click="clearFilter()"></i>
@@ -18,8 +18,8 @@
                 </div>
             </div>
             <div class="right floated three wide column">
-                <router-link class="ui right floated primary button" to="schema/create/new">
-                    {{ $t('axon.knowledge.form.dataSchemaList.create')}}
+                <router-link class="ui right floated primary button" to="business-process/create/new">
+                    {{ $t('axon.bpm.form.businessProcessList.create')}}
                 </router-link>
             </div>
         </template>
@@ -35,27 +35,33 @@
             </div>
         </div>
         <div class="ui segment" v-if="!isEmpty">
-            <data-schema-table :sortState="sortState" @toggleSort="toggleDataSchemaSort">
+            <business-process-table :sortState="sortState" @toggleSort="toggleBusinessProcessSort">
                 <template slot-scope="slotProps">
 
-                    <router-link class="ui tiny basic icon button" :to="`schema/create/${slotProps.dataSchema.key}`">
+                    <router-link class="ui tiny basic icon button"
+                                 :to="`business-process/create/${slotProps.businessProcess.id}`">
                         <i class="copy outline green icon"></i>
                     </router-link>
-                    <router-link class="ui tiny basic icon button" :to="`schema/edit/${slotProps.dataSchema.key}`">
+                    <router-link class="ui tiny basic icon button"
+                                 :to="`business-process/edit/${slotProps.businessProcess.id}`">
                         <i class="edit blue icon"></i>
                     </router-link>
-                    <button class="ui tiny basic icon button"
-                            @click="requestDelete(slotProps.dataSchema.key, slotProps.dataSchema.name)">
+                    <button type="button" class="ui tiny basic icon button"
+                            @click="requestDelete(slotProps.businessProcess.id, slotProps.businessProcess.name)">
                         <i class="delete red icon"></i>
+                    </button>
+                    <button type="button" class="ui tiny basic icon button"
+                            @click="run(slotProps.businessProcess.id)"><i
+                            class="play violet icon"></i>
                     </button>
 
                 </template>
-            </data-schema-table>
+            </business-process-table>
         </div>
         <div class="ui placeholder segment" v-if="isEmpty">
             <div class="ui icon header">
                 <i class="object group outline icon"></i>
-                {{ $t('axon.knowledge.form.dataSchemaList.notFound') }}
+                {{ $t('axon.bpm.form.businessProcessList.notFound') }}
             </div>
         </div>
 
@@ -63,16 +69,15 @@
         <sui-modal v-model="deleteModalContext.open" size="tiny">
             <sui-modal-header>{{ $t('axon.shared.delete')}}</sui-modal-header>
             <sui-modal-content image>
-                <p>{{ $t('axon.knowledge.md.dataSchema.delete', {name: deleteModalContext.name})}}?</p>
+                <p>{{ $t('axon.bpm.md.businessProcess.delete', {name: deleteModalContext.name})}}</p>
             </sui-modal-content>
             <sui-modal-actions>
                 <button class="ui basic button" @click="deleteModalContext.open = false">{{ $t('axon.shared.cancel')}}
                 </button>
-                <button class="ui red button" @click="performDelete" autofocus>{{
-                    $t('axon.shared.delete')}}
-                </button>
+                <button class="ui red button" @click="performDelete" autofocus>{{ $t('axon.shared.delete')}}</button>
             </sui-modal-actions>
         </sui-modal>
+
     </app-form>
 </template>
 
@@ -81,21 +86,21 @@
     import {Action, Getter, Mutation} from 'vuex-class';
     import _ from 'lodash';
     import AppForm from '@/annette/layout/AppForm.vue';
-    import DataSchemaTable from '@/axon/knowledge/config/DataSchemaTable.vue';
-    import {KNOWLEDGE_DATA_SCHEMA_NAMESPACE} from '@/axon/knowledge/shared/data-schema/store';
+    import BusinessProcessTable from './BusinessProcessTable.vue';
+    import {BPM_BUSINESS_PROCESS_NAMESPACE} from '@/axon/bpm/shared/process/store';
+    import {BusinessProcessFilter, emptyBusinessProcessFilter} from '@/axon/bpm/shared/process/model';
 
-    const namespace: string = KNOWLEDGE_DATA_SCHEMA_NAMESPACE;
+    const namespace: string = BPM_BUSINESS_PROCESS_NAMESPACE;
 
     @Component({
         components: {
             AppForm,
-            DataSchemaTable,
+            BusinessProcessTable,
         },
     })
-    export default class DataSchemaList extends Vue {
+    export default class BusinessProcessList extends Vue {
 
-        filter: string = '';
-
+        filter: BusinessProcessFilter = {...emptyBusinessProcessFilter};
         deleteModalContext = {
             open: false,
             id: '',
@@ -104,13 +109,13 @@
 
         @Action('InitFilter', {namespace}) initFilter: any;
         @Action('Find', {namespace}) find: any;
-        @Mutation('ToggleSort', {namespace}) toggleDataSchemaSort: any;
+        @Mutation('ToggleSort', {namespace}) toggleBusinessProcessSort: any;
         @Mutation('ClearFailure', {namespace}) clearFailure: any;
         @Getter('filter', {namespace}) filterState;
         @Getter('sortState', {namespace}) sortState;
         @Getter('failure', {namespace}) failure;
 
-        @Action('Delete', {namespace}) deleteDataSchema: any;
+        @Action('Delete', {namespace}) deleteBusinessProcess: any;
 
         lazyFind = _.debounce(f => {
                 this.find(f);
@@ -123,12 +128,14 @@
         }
 
         created() {
-            if (this.filterState) { this.filter = this.filterState };
+            if (this.filterState) {
+                this.filter = this.filterState;
+            }
         }
 
-        @Watch('filterState')
-        onFilterStateChanged(val: string, oldVal: string) {
-            this.filter = val;
+        @Watch('filterState', {deep: true})
+        onFilterStateChanged(val: BusinessProcessFilter, oldVal: BusinessProcessFilter) {
+            this.filter = {...val};
         }
 
         setFilter(filter: string) {
@@ -136,7 +143,7 @@
         }
 
         clearFilter() {
-            this.find('');
+            this.find({...emptyBusinessProcessFilter});
         }
 
         refresh() {
@@ -160,7 +167,7 @@
         }
 
         performDelete() {
-            this.deleteDataSchema(this.deleteModalContext.id);
+            this.deleteBusinessProcess(this.deleteModalContext.id);
             this.deleteModalContext = {
                 open: false,
                 id: null,

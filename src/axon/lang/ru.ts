@@ -26,7 +26,7 @@ export default {
         bpm: {
             md: {
                 bpmDiagram: {
-                    key: 'Ид',
+                    id: 'Ид',
                     name: 'Наименование',
                     description: 'Описание',
                     notation: 'Нотация',

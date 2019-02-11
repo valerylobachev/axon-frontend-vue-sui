@@ -1,5 +1,6 @@
 import {BpmDiagram, BpmDiagramSummary} from './model';
 import axios from 'axios';
+import {DeploymentWithDefs} from '@/axon/bpm/shared/deployment/model';
 
 
 const SERVICE_BASE = '/web-api/bpm/repository';

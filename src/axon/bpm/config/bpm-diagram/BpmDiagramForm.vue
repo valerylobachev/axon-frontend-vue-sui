@@ -57,7 +57,7 @@
                  v-if="failure">
                 <p>{{ $t(failure.code, failure) }}</p>
             </div>
-            <form class="ui form">
+            <div class="ui form">
                 <!--:class="{ error: !formGroup.valid && formGroup.touched }"-->
 
                 <sui-tab style="height: 100%" :menu="{ pointing: true, secondary: true }">
@@ -92,10 +92,10 @@
                     </sui-tab-pane>
                     <sui-tab-pane :title="$t('axon.bpm.form.bpmDiagramForm.designerTab')">
                         <div class="reset-padding">
-                            <bpmn-edit v-if="bpmDiagram.notation === 'BPMN' && (action === 'edit' || action === 'create')"
+                            <bpmn-edit v-if="bpmDiagram.notation === 'BPMN' && action !== 'view' "
                                        v-model="bpmDiagram.xml"
                                        @processDefinitions="bpmDiagram.processDefinitions = $event"></bpmn-edit>
-                            <bpmn-view v-if="bpmDiagram.notation === 'BPMN' "
+                            <bpmn-view v-if="bpmDiagram.notation === 'BPMN' && action === 'view'"
                                        v-model="bpmDiagram.xml"></bpmn-view>
                             <dmn-view v-if="bpmDiagram.notation === 'DMN' "
                                       v-model="bpmDiagram.xml"></dmn-view>
@@ -117,7 +117,7 @@
                         </div>
                     </sui-tab-pane>
                 </sui-tab>
-            </form>
+            </div>
         </div>
 
     </app-form>
@@ -126,14 +126,14 @@
 
 <script lang="ts">
     import {Component, Vue, Watch} from 'vue-property-decorator';
-    import ProcessDefList from '@/axon/bpm/config/ProcessDefList.vue';
+    import ProcessDefList from './ProcessDefLabels.vue';
     import {NEW_BPMN_DIAGRAM, BpmDiagram} from '@/axon/bpm/shared/diagram/model';
     import {Action, Getter} from 'vuex-class';
-    import BpmnEdit from '@/axon/bpm/config/bpmn/BpmnEdit.vue';
+    import BpmnEdit from './bpmn/BpmnEdit.vue';
     import AppForm from '@/annette/layout/AppForm.vue';
-    import BpmnView from '@/axon/bpm/config/bpmn/BpmnView.vue';
-    import DmnView from '@/axon/bpm/config/bpmn/DmnView.vue';
-    import CmmnView from '@/axon/bpm/config/bpmn/CmmnView.vue';
+    import BpmnView from './bpmn/BpmnView.vue';
+    import DmnView from './bpmn/DmnView.vue';
+    import CmmnView from './bpmn/CmmnView.vue';
     import {BPM_DIAGRAM_NAMESPACE} from '@/axon/bpm/shared/diagram/store';
 
     const namespace: string = BPM_DIAGRAM_NAMESPACE;
@@ -154,7 +154,7 @@
         action = 'view';
         id = '';
 
-        @Getter('loading', {namespace}) loading = true;
+        @Getter('loading', {namespace}) loading;
         @Getter('failure', {namespace}) failure;
         @Getter('entity', {namespace}) entity;
         @Getter('saved', {namespace}) saved;

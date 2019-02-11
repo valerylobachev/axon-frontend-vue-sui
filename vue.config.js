@@ -1,7 +1,16 @@
 // vue.config.js
+
+console.log(process.env.NODE_ENV)
+if (process.env.NODE_ENV === 'development' ) {
+  outDir = 'dist'
+} else {
+  outDir = "../annette-axon/axon-backend/public/dist"
+}
+
 module.exports = {
 
-  outputDir: "../annette-axon/axon-backend/public/dist",
+  // outputDir: "../annette-axon/axon-backend/public/dist",
+  outputDir: outDir,
   //assetsDir: "assets/dist/",
   publicPath: "assets/dist/",
 
@@ -14,16 +23,12 @@ module.exports = {
     // }
   },
 
+  devServer: {
+    contentBase: outDir,
+    port: 8080,
+    // Send API requests on localhost to API server get around CORS.
+    proxy: 'http://localhost:9000'
+  },
 
-
-//   devServer: {
-//     historyApiFallback: true,
-//     watchOptions: { aggregateTimeout: 300, poll: 1000 },
-//     headers: {
-//       "Access-Control-Allow-Origin": "*",
-// //      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-// //      "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
-//     }
-//   },
 }
 

@@ -1,8 +1,8 @@
 <template>
     <div class="ui small labels">
         <router-link class="ui label"
-                     v-for="pd in processDefinitionsList()"
-                     to="TBD"
+                     v-for="pd in processDefinitionsLabels()"
+                     :to="{name: 'processDefs', query: {key: pd}}"
                      :key="pd">
             {{ pd }}
         </router-link>
@@ -17,7 +17,7 @@
     export default class ProcessDefList extends Vue {
         @Prop(String) value: string
 
-        processDefinitionsList() {
+        processDefinitionsLabels() {
             if (this.value && this.value.length > 0) {
                 return this.value.split(' ');
             } else {
