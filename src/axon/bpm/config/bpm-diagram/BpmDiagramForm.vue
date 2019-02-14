@@ -127,7 +127,7 @@
 <script lang="ts">
     import {Component, Vue, Watch} from 'vue-property-decorator';
     import ProcessDefList from './ProcessDefLabels.vue';
-    import {NEW_BPMN_DIAGRAM, BpmDiagram} from '@/axon/bpm/shared/diagram/model';
+    import {BpmDiagram, newBpmnDiagram} from '@/axon/bpm/shared/diagram/model';
     import {Action, Getter} from 'vuex-class';
     import BpmnEdit from './bpmn/BpmnEdit.vue';
     import AppForm from '@/annette/layout/AppForm.vue';
@@ -149,7 +149,7 @@
         },
     })
     export default class BpmDiagramForm extends Vue {
-        bpmDiagram: BpmDiagram = NEW_BPMN_DIAGRAM;
+        bpmDiagram: BpmDiagram = newBpmnDiagram();
 
         action = 'view';
         id = '';

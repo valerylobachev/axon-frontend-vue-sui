@@ -10,21 +10,15 @@
                         <div class="eight wide field">
                             <label>{{ $t('axon.bpm.md.processDef.key') }}</label>
                             <div class="ui fluid icon input">
-
-                                <input type="text"
-                                       v-model="filter.key">
-                                <i class=" close link icon"
-                                   @click="filter.key = ''"></i>
+                                <input type="text" v-model="filter.key">
+                                <i class=" close link icon" @click="filter.key = ''"></i>
                             </div>
                         </div>
                         <div class="eight wide field">
                             <label>{{ $t('axon.bpm.md.processDef.name') }}</label>
                             <div class="ui fluid icon input">
-
-                                <input type="text"
-                                       v-model="filter.name">
-                                <i class=" close link icon"
-                                   @click="filter.name = ''"></i>
+                                <input type="text" v-model="filter.name">
+                                <i class=" close link icon" @click="filter.name = ''"></i>
                             </div>
                         </div>
                     </div>
@@ -34,10 +28,10 @@
                     </div>
                 </div>
                 <div class="form-buttons">
-                    <button class="ui fluid primary button" @click.prevent="refresh()">
+                    <button class="ui fluid primary button" @click="find(filter)">
                         {{ $t('axon.shared.find') }}
                     </button>
-                    <button type="button" class="ui fluid basic button" @click.prevent="clearFilter()">
+                    <button class="ui fluid basic button" @click="clearFilter()">
                         {{ $t('axon.shared.clear') }}
                     </button>
                 </div>
@@ -45,7 +39,6 @@
         </template>
 
         <div class="ui segment" v-if="failure">
-
             <div class="ui negative message">
                 <i class="close icon" @click="clearFailure"></i>
                 <div class="header">
@@ -55,8 +48,7 @@
             </div>
         </div>
         <div class="ui segment" v-if="!isEmpty">
-            <process-def-table :sortState="sortState" @toggleSort="toggleProcessDefSort">
-            </process-def-table>
+            <process-def-table :sortState="sortState" @toggleSort="toggleProcessDefSort"></process-def-table>
         </div>
         <div class="ui placeholder segment" v-if="isEmpty">
             <div class="ui icon header">
@@ -71,7 +63,6 @@
 <script lang="ts">
     import {Component, Vue, Watch} from 'vue-property-decorator';
     import {Action, Getter, Mutation} from 'vuex-class';
-    import _ from 'lodash';
     import AppForm from '@/annette/layout/AppForm.vue';
     import {BPM_DEPLOYMENT_NAMESPACE} from '@/axon/bpm/shared/deployment/store';
     import ProcessDefTable from './ProcessDefTable.vue';
@@ -87,28 +78,18 @@
     })
     export default class ProcessDefList extends Vue {
 
-        filter: FindProcessDefOptions = emptyProcessDefFilter;
-
-        deleteModalContext = {
-            open: false,
-            id: '',
-            name: '',
-        };
+        filter: FindProcessDefOptions = emptyProcessDefFilter();
 
 
         @Action('InitFilter', {namespace}) initFilter: any;
-        @Action('FindProcessDef', {namespace}) find: any;
-        @Mutation('ToggleProcessDefSort', {namespace}) toggleProcessDefSort: any;
+        @Action('Find', {namespace}) find: any;
+        @Mutation('ToggleSort', {namespace}) toggleProcessDefSort: any;
         @Mutation('ClearFailure', {namespace}) clearFailure: any;
         @Getter('filter', {namespace}) filterState;
         @Getter('sortState', {namespace}) sortState;
         @Getter('failure', {namespace}) failure;
 
 
-        lazyFind = _.debounce(f => {
-                this.find(f);
-            },
-            500);
 
         constructor() {
             super();
@@ -124,7 +105,7 @@
         @Watch('$route', {immediate: true, deep: true})
         onRouteChange(to, from) {
             if (to.query.key) {
-                this.find({...emptyProcessDefFilter, key: to.query.key})
+                this.find({...emptyProcessDefFilter(), key: to.query.key})
             }
         }
 
@@ -133,16 +114,8 @@
             this.filter = newVal;
         }
 
-        setFilter(filter: FindProcessDefOptions) {
-            this.lazyFind(filter);
-        }
-
         clearFilter() {
-            this.find(emptyProcessDefFilter);
-        }
-
-        refresh() {
-            this.find(this.filterState);
+            this.find(emptyProcessDefFilter());
         }
 
         get isEmpty() {

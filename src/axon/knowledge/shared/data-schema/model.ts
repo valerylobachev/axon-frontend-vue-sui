@@ -36,3 +36,9 @@ export const NEW_DATA_SCHEMA: DataSchema = {
     baseSchemas: [],
     fields: {},
 };
+
+
+export interface DataSchemaDetail {
+    key: string,
+    name: string,
+}

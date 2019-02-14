@@ -15,6 +15,10 @@
                     {{ $t('axon.shared.saved') }}
                 </div>
                 <div class="ui red label"
+                     v-if="(!businessProcess.key || businessProcess.key.trim().length == 0) && action !== 'view' && !loading">
+                    {{ $t('axon.bpm.form.businessProcessForm.keyRequired') }}
+                </div>
+                <div class="ui red label"
                      v-if="(!businessProcess.name || businessProcess.name.trim().length == 0) && action !== 'view' && !loading">
                     {{ $t('axon.bpm.form.businessProcessForm.nameRequired') }}
                 </div>
@@ -59,7 +63,17 @@
                 <sui-tab style="height: 100%" :menu="{ pointing: true, secondary: true }">
                     <!--:menu="{ pointing: true, secondary: true }"-->
                     <sui-tab-pane :title="$t('axon.bpm.form.businessProcessForm.infoTab')">
-
+                        <div class="field">
+                            <!--[class.error]="!nameControl.valid && nameControl.touched"-->
+                            <label>{{ $t('axon.bpm.md.businessProcess.key') }}</label>
+                            <input type="text" name="key"
+                                   v-model="businessProcess.key"
+                                   :readOnly="action !== 'create'">
+                            <div class="ui error message"
+                                 v-if="!(this.businessProcess.key && this.businessProcess.key.length > 0)">
+                                {{ $t('axon.bpm.form.businessProcessForm.nameRequired') }}
+                            </div>
+                        </div>
                         <div class="field">
                             <!--[class.error]="!nameControl.valid && nameControl.touched"-->
                             <label>{{ $t('axon.bpm.md.businessProcess.name') }}</label>
@@ -76,6 +90,36 @@
                             <textarea name="description"
                                       v-model="businessProcess.description"
                                       :readOnly="action == 'view'"></textarea>
+                        </div>
+                        <div class="field">
+                            <label>{{ $t('axon.bpm.md.businessProcess.processReference') }}</label>
+                            <process-reference-view
+                                    key="processReferenceView"
+                                    v-if="action === 'view'"
+                                    :value="businessProcess.processReference"
+                                    :detail="businessProcess.processReferenceDetail"></process-reference-view>
+                            <process-reference-field
+                                    name="processReferenceField"
+                                    v-if="action !== 'view'"
+                                    v-model="businessProcess.processReference"
+                                    :detail="businessProcess.processReferenceDetail"
+                                    @detailChanged="businessProcess.processReferenceDetail = $event">
+                            </process-reference-field>
+                        </div>
+                        <div class="field">
+                            <label>{{ $t('axon.bpm.md.businessProcess.dataSchemaKey') }}</label>
+                            <data-schema-view
+                                    key="dataSchemaView"
+                                    v-if="action === 'view'"
+                                    :value="businessProcess.dataSchemaKey"
+                                    :detail="businessProcess.dataSchemaDetail"></data-schema-view>
+                            <data-schema-field
+                                    key="dataSchemaField"
+                                    v-if="action !== 'view'"
+                                    v-model="businessProcess.dataSchemaKey"
+                                    :detail="businessProcess.dataSchemaDetail"
+                                    @detailChanged="businessProcess.dataSchemaDetail = $event">
+                            </data-schema-field>
                         </div>
                     </sui-tab-pane>
                     <sui-tab-pane :title="$t('axon.bpm.form.businessProcessForm.defaultsTab')">
@@ -95,18 +139,26 @@
     import {Component, Vue, Watch} from 'vue-property-decorator';
     import {Action, Getter} from 'vuex-class';
     import AppForm from '@/annette/layout/AppForm.vue';
-    import {BusinessProcess, NEW_BUSINESS_PROCESS} from '@/axon/bpm/shared/process/model';
+    import {BusinessProcess, newBusinessProcess} from '@/axon/bpm/shared/process/model';
     import {BPM_BUSINESS_PROCESS_NAMESPACE} from '@/axon/bpm/shared/process/store';
+    import DataSchemaField from '@/axon/knowledge/shared/components/DataSchemaField.vue';
+    import ProcessReferenceField from '@/axon/bpm/shared/components/ProcessReferenceField.vue';
+    import ProcessReferenceView from '@/axon/bpm/shared/components/ProcessReferenceView.vue';
+    import DataSchemaView from '@/axon/knowledge/shared/components/DataSchemaView.vue';
 
     const namespace: string = BPM_BUSINESS_PROCESS_NAMESPACE;
 
     @Component({
         components: {
+            ProcessReferenceField,
+            ProcessReferenceView,
+            DataSchemaField,
+            DataSchemaView,
             AppForm,
         },
     })
     export default class BusinessProcessForm extends Vue {
-        businessProcess: BusinessProcess = NEW_BUSINESS_PROCESS;
+        businessProcess: BusinessProcess = newBusinessProcess();
 
         action = 'view';
         id = '';
@@ -143,14 +195,14 @@
         get isDirty() {
             if (this.entity && this.businessProcess) {
                 return this.businessProcess.name !== this.entity.name ||
-                    this.businessProcess.description !== this.entity.description
+                    this.businessProcess.description !== this.entity.description;
             } else {
                 return false;
             }
         }
 
         get isValid() {
-            return this.businessProcess.name && this.businessProcess.name.length > 0
+            return this.businessProcess.name && this.businessProcess.name.length > 0;
         }
     }
 </script>

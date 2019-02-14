@@ -32,11 +32,6 @@
 
         private sidebarVisible = true;
 
-        private created() {
-            // `this` указывает на экземпляр vm
-            console.log('AppLayout.created');
-        }
-
         private toggleSidebar() {
             this.sidebarVisible = !this.sidebarVisible;
         }

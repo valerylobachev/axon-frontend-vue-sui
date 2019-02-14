@@ -43,7 +43,7 @@ const TYPE_OPTIONS = [
     { value: 'date', text: 'Date' },
     { value: 'record', text: 'Record' },
     { value: 'array', text: 'Array' },
-]
+];
 @Component({
     components: {
         DataSchemaModalSelector,
@@ -60,7 +60,7 @@ export default class DatatypeSelector extends Vue {
         key: '',
         name: '',
         description: '',
-    }
+    };
 
     created() {
         this.onValueChanged(this.value);
@@ -80,7 +80,7 @@ export default class DatatypeSelector extends Vue {
 
     select() {
         (this.$refs.dataSchemaSelector as DataSchemaModalSelector).select().then(res => {
-            this.datatype.key = res.key
+            this.datatype.key = res.key;
             this.emitUpdate()
         })
     }
@@ -88,15 +88,15 @@ export default class DatatypeSelector extends Vue {
     selectDatatype(event) {
         console.log(event);
         if (event === 'array') {
-            this.$set(this.datatype, 'element', { type: 'string' })
-            this.$set(this.datatype, 'key', null)
+            this.$set(this.datatype, 'element', { type: 'string' });
+            this.$set(this.datatype, 'key', null);
             this.emitUpdate()
         } else if (event === 'record') {
-            this.$set(this.datatype, 'element', null)
-            this.$set(this.datatype, 'key', '')
+            this.$set(this.datatype, 'element', null);
+            this.$set(this.datatype, 'key', '');
             this.emitUpdate()
         } else {
-            this.$set(this.datatype, 'element', null)
+            this.$set(this.datatype, 'element', null);
             this.$set(this.datatype, 'key', null)
         }
     }

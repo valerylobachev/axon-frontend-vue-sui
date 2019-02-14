@@ -7,7 +7,7 @@
             <div class="ten wide column">
                 <div class="ui icon action input" style="width: 100%;">
                     <input type="text" :placeholder="$t('axon.bpm.form.bpmDiagrams.filter')"
-                           v-model="filter"
+                           v-model="filter.filter"
                            @input="setFilter($event.target.value)">
                     <i class=" close link icon"
                        style="right: 2.6em; width: 2em;"
@@ -112,6 +112,7 @@
     import BpmDiagramTable from './BpmDiagramTable.vue';
     import {BPM_DIAGRAM_NAMESPACE} from '@/axon/bpm/shared/diagram/store';
     import bpmDeploymentBackendService from '@/axon/bpm/shared/deployment/backend.service';
+    import {BpmDiagramFilter, emptyBpmDiagramFilter} from '@/axon/bpm/shared/diagram/model';
 
     const namespace: string = BPM_DIAGRAM_NAMESPACE;
 
@@ -124,7 +125,7 @@
     })
     export default class BpmDiagramList extends Vue {
 
-        filter: string = '';
+        filter: BpmDiagramFilter = emptyBpmDiagramFilter();
         deleteModalContext = {
             open: false,
             id: '',
@@ -163,16 +164,16 @@
         }
 
         @Watch('filterState')
-        onFilterStateChanged(val: string, oldVal: string) {
+        onFilterStateChanged(val) {
             this.filter = val;
         }
 
         setFilter(filter: string) {
-            this.lazyFind(filter);
+            this.lazyFind({filter});
         }
 
         clearFilter() {
-            this.find('');
+            this.find(emptyBpmDiagramFilter());
         }
 
         refresh() {
@@ -206,8 +207,6 @@
 
         deploy(id: string) {
             bpmDeploymentBackendService.deploy(id).then(result => {
-                console.log('Deployment result:')
-                console.log(result);
                 this.deployModalContext = {
                     open: true,
                     name: result.name,

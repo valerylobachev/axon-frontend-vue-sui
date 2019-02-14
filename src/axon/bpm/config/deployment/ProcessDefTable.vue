@@ -25,10 +25,13 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="entity in sortState.sortedEntities">
+        <tr :class="{ selectable: selection }"
+            v-for="entity in sortState.sortedEntities"
+            :key="entity.id"
+            @click.prevent="selectEntity(entity)">
             <td>{{ entity.key }}</td>
             <td>{{ entity.version }}</td>
-            <td>{{ entity.name }}          </td>
+            <td>{{ entity.name }}</td>
             <td>{{ entity.description }}</td>
         </tr>
         </tbody>
@@ -37,17 +40,14 @@
 
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
-    import {BpmDiagramSummary} from '@/axon/bpm/shared/diagram/model';
-    import ProcessDefList from './ProcessDefList.vue';
 
     @Component({
-        components: {
-            ProcessDefList,
-        },
+        components: {},
     })
     export default class ProcessDefTable extends Vue {
 
-        @Prop(Object) sortState;
+    @Prop(Object) sortState;
+    @Prop({ default: false }) selection;
 
         toggleSort(field: string) {
             this.$emit('toggleSort', field);
@@ -61,11 +61,21 @@
             return this.sortState.sortField === field && !this.sortState.sortAscending;
         }
 
+        selectEntity(entity) {
+            if (this.selection) {
+                this.$emit('select', entity)
+            }
+        }
+
     }
 </script>
 
 <style lang="scss">
     .ui.table thead th {
+        cursor: pointer;
+    }
+
+    .selectable {
         cursor: pointer;
     }
 </style>

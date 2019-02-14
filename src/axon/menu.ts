@@ -3,7 +3,7 @@ import {MenuModel} from '@/annette/layout/menu.model';
 export const MENU: MenuModel[] = [
 
     {state: '/bpm/tasks', name: 'axon.menu.tasks', type: 'link', icon: 'tasks'},
-    {state: '/bpm/processes', name: 'axon.menu.processes', type: 'link', icon: 'list'},
+    {state: '/bpm/processes', name: 'axon.menu.processes', type: 'link', icon: 'play'},
     {state: '/org-structure', name: 'axon.menu.orgStructure', type: 'link', icon: 'sitemap'},
     {state: '/projects', name: 'axon.menu.projects', type: 'link', icon: 'cubes'},
     {name: 'axon.menu.config.title', type: 'header'},
@@ -14,7 +14,7 @@ export const MENU: MenuModel[] = [
                 state: '/bpm-config/diagrams', name: 'axon.menu.config.bpm.bpmDiagrams',
                 type: 'link', icon: 'object group outline',
             },
-            {state: '/bpm-config/processDefs', name: 'axon.menu.config.bpm.processDefs', type: 'link', icon: 'list'},
+            {state: '/bpm-config/processDefs', name: 'axon.menu.config.bpm.processDefs', type: 'link', icon: 'upload'},
             {
                 state: '/bpm-config/business-processes',
                 name: 'axon.menu.config.bpm.processes',

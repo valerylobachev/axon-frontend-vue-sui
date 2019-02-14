@@ -45,9 +45,10 @@ export default {
                     description: 'Description',
                     version: 'Version',
                     delete: 'Are you sure to delete diagram {name}?',
+                    invalidProcessReference: 'Invalid process reference',
                 },
                 businessProcess: {
-                    id: 'Id',
+                    key: 'Key',
                     name: 'Name',
                     description: 'Description',
                     processReference: 'Process reference',
@@ -83,6 +84,9 @@ export default {
                     notFound: 'No process definition has been found.',
                     latest: 'Latest versions',
                 },
+                processDefModalSelector: {
+                    title: 'Select process definition',
+                },
                 businessProcessList: {
                     title: 'Business Processes ',
                     actions: 'Actions',
@@ -94,6 +98,7 @@ export default {
                     createTitle: 'Create business process',
                     viewTitle: 'View business process',
                     editTitle: 'Edit business process',
+                    keyRequired: 'Key required',
                     nameRequired: 'Name required',
                     infoTab: 'Info',
                     defaultsTab: 'Default Values',
@@ -110,6 +115,7 @@ export default {
                     baseSchemas: 'Base records',
                     fields: 'Fields',
                     delete: 'Are you sure to delete data schema {name}?',
+                    invalidDataSchema: 'Invalid data schema',
                 },
                 dataSchemaField: {
                     key: 'Key',

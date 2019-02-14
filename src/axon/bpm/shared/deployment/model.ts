@@ -8,7 +8,6 @@ export interface DeploymentWithDefs {
     decisionRequirementsDefs: DecisionRequirementsDef[],
 }
 
-
 export interface ProcessDef {
     id: string,
     key: string,
@@ -50,9 +49,22 @@ export interface FindProcessDefOptions {
     latest: boolean
 }
 
+export function emptyProcessDefFilter(): FindProcessDefOptions {
+    return {
+        key: '',
+        name: '',
+        latest: true,
+    }
+}
 
-export const emptyProcessDefFilter: FindProcessDefOptions =  {
-    key: '',
-    name: '',
-    latest: true,
+export interface ProcessReference {
+    reference: string,
+    key?: string,
+    id?: string
+}
+
+export interface ProcessReferenceDetail {
+    key: string,
+    version?: string,
+    name: string,
 }

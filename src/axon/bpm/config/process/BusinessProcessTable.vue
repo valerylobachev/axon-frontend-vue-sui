@@ -2,6 +2,11 @@
     <table class="ui selectable fixed single line striped table">
         <thead>
         <tr>
+            <th @click="toggleSort('key')">
+                {{ $t('axon.bpm.md.businessProcess.key') }}
+                <i class="sort up icon" v-if="isSortAscending('key')"></i>
+                <i class="sort down icon" v-if="isSortDescending('key')"></i>
+            </th>
             <th @click="toggleSort('name')">
                 {{ $t('axon.bpm.md.businessProcess.name') }}
                 <i class="sort up icon" v-if="isSortAscending('name')"></i>
@@ -27,40 +32,22 @@
         </thead>
         <tbody>
         <tr v-for="businessProcess in sortState.sortedEntities">
+            <td>{{ businessProcess.key }}</td>
             <td>
-                <router-link :to="`business-process/view/${businessProcess.id}`">{{ businessProcess.name }}
+                <router-link :to="`business-process/view/${businessProcess.key}`">{{ businessProcess.name }}
                 </router-link>
             </td>
             <td>{{ businessProcess.description }}</td>
             <td>
-                <div v-if="!businessProcess.processReferenceDetail">
-                    <div class="ui red image label">
-                        ???
-                        <div class="detail"> ???</div>
-                    </div>
-                </div>
-                <div v-if="businessProcess.processReferenceDetail">
-                    <router-link class="ui blue image label"
-                       :to="{name: 'processDefs', query: {key: businessProcess.processReferenceDetail.key}}">
-                        {{ businessProcess.processReferenceDetail.key }}
-                        <div class="detail"> {{ businessProcess.processReferenceDetail.version }}</div>
-                    </router-link>
-                    <div>{{ businessProcess.processReferenceDetail.name }}</div>
-                </div>
+                <process-reference-view
+                        :value="businessProcess.processReference"
+                        :detail="businessProcess.processReferenceDetail"></process-reference-view>
             </td>
             <td>
-                <div v-if="!businessProcess.dataSchemaDetail">
-                    <div class="ui red label">
-                        ???
-                    </div>
-                </div>
-                <div v-if="businessProcess.dataSchemaDetail">
-                    <router-link class="ui teal label"
-                       :to="`/knowledge-config/schema/view/${businessProcess.dataSchemaDetail.key}`">
-                        {{ businessProcess.dataSchemaDetail.key }}
-                    </router-link>
-                    <div>{{ businessProcess.dataSchemaDetail.name }}</div>
-                </div>
+                <data-schema-view
+                        :value="businessProcess.dataSchemaKey"
+                        :detail="businessProcess.dataSchemaDetail"></data-schema-view>
+
             </td>
             <td>
                 <slot v-bind:businessProcess="businessProcess"></slot>
@@ -72,9 +59,11 @@
 
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
+    import ProcessReferenceView from '@/axon/bpm/shared/components/ProcessReferenceView.vue';
+    import DataSchemaView from '@/axon/knowledge/shared/components/DataSchemaView.vue';
 
     @Component({
-        components: {},
+        components: {ProcessReferenceView, DataSchemaView},
     })
     export default class BusinessProcessTable extends Vue {
 

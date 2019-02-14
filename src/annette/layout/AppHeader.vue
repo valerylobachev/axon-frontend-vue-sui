@@ -54,10 +54,6 @@
         @State('app') appState: AppState;
         @Action('setLanguage', { namespace }) setLanguage: any;
 
-        private created() {
-            // `this` указывает на экземпляр vm
-            console.log('AppHeader.created');
-        }
 
         private onProfileClick() {
             authService.accountManagement();

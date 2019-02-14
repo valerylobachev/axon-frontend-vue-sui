@@ -5,28 +5,24 @@ import {
     FindProcessDefOptions,
     ProcessDef,
 } from '@/axon/bpm/shared/deployment/model';
+import {BaseBackendService} from '@/annette/crud/store/base-backend.service';
 
+class BpmDeploymentBackendService extends BaseBackendService<FindProcessDefOptions, ProcessDef, ProcessDef> {
 
-const SERVICE_BASE = '/web-api/bpm/deployment';
+    constructor() {
+        super('/web-api/bpm/deployment',  'processDef', 'processDefs')
+    }
 
-function findAll(): Promise<ProcessDef[]> {
-    return find(emptyProcessDefFilter);
+    findAll(): Promise<ProcessDef[]> {
+        return this.find(emptyProcessDefFilter());
+    }
+
+    deploy(id: string): Promise<DeploymentWithDefs> {
+        return axios.post(`${this.serviceBase}/deploy/${id}`)
+            .then(result => result.data);
+    }
 }
 
-function find(filter: FindProcessDefOptions): Promise<ProcessDef[]> {
-    return axios.post(`${SERVICE_BASE}/processDefs`, filter)
-        .then(result => result.data);
-}
-
-function deploy(id: string): Promise<DeploymentWithDefs> {
-    return axios.post(`${SERVICE_BASE}/deploy/${id}`)
-        .then(result => result.data);
-}
-
-const bpmDeploymentBackendService = {
-    find,
-    findAll,
-    deploy,
-};
+const bpmDeploymentBackendService = new BpmDeploymentBackendService()
 
 export default bpmDeploymentBackendService;

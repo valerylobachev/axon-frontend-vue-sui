@@ -1,8 +1,8 @@
 import {BusinessProcess, BusinessProcessFilter, BusinessProcessSummary} from '@/axon/bpm/shared/process/model';
-import {BaseBackendService} from '@/annette/core/crud/backend.service';
+import {CrudBackendService} from '@/annette/crud/store/index';
 
 const bpmBusinessProcessBackendService =
-    new BaseBackendService<BusinessProcessFilter, BusinessProcess, BusinessProcessSummary>(
+    new CrudBackendService<BusinessProcessFilter, BusinessProcess, BusinessProcessSummary>(
         '/web-api/bpm/repository', 'businessProcess', 'businessProcesses');
 
 export default bpmBusinessProcessBackendService;

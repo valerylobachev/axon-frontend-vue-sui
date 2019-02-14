@@ -1,17 +1,14 @@
-import {ActionTree, Module} from 'vuex';
+import {Module} from 'vuex';
 import {RootState} from '@/annette/core/store/root-state';
-import bpmBusinessProcessBackendService from '@/axon/bpm/shared/process/backend.service';
+import bpmBusinessProcessBackendService from './backend.service';
 import {
     BusinessProcess,
     BusinessProcessFilter,
     BusinessProcessSummary, emptyBusinessProcessFilter,
-    NEW_BUSINESS_PROCESS,
-} from '@/axon/bpm/shared/process/model';
-import {buildEmptyCrudState, CrudState} from '@/annette/core/crud/types';
-import {buildMutations} from '@/annette/core/crud/mutations';
-import {buildActions} from '@/annette/core/crud/actions';
-import {buildGetters} from '@/annette/core/crud/getters';
+    newBusinessProcess,
+} from './model';
 import {vm} from '@/main';
+import {CrudState, CrudStoreBuilder} from '@/annette/crud/store/index';
 
 
 export interface BusinessProcessState
@@ -19,18 +16,20 @@ export interface BusinessProcessState
 }
 
 export const state: BusinessProcessState =
-    buildEmptyCrudState<BusinessProcessFilter, BusinessProcess, BusinessProcessSummary>(emptyBusinessProcessFilter);
+    CrudStoreBuilder.buildState<BusinessProcessFilter, BusinessProcess, BusinessProcessSummary>(emptyBusinessProcessFilter());
 
 
-const actions = buildActions<BusinessProcessFilter, BusinessProcess, BusinessProcessSummary>(
-    bpmBusinessProcessBackendService, {...emptyBusinessProcessFilter}, {...NEW_BUSINESS_PROCESS},
+const actions = CrudStoreBuilder.buildActions<BusinessProcessFilter, BusinessProcess, BusinessProcessSummary>(
+    bpmBusinessProcessBackendService, emptyBusinessProcessFilter(), newBusinessProcess(),
 );
 
-const mutations = buildMutations<BusinessProcessFilter, BusinessProcess, BusinessProcessSummary>(
-    'id', entity => vm.$router.push(`/bpm-config/business-process/edit/${entity.id}`),
+const mutations = CrudStoreBuilder.buildMutations<BusinessProcessFilter, BusinessProcess, BusinessProcessSummary>(
+    'key',
+    entity => vm.$router.push(`/bpm-config/business-process/edit/${entity.key}`),
+    () => '',
 );
 
-const getters = buildGetters<BusinessProcessFilter, BusinessProcess, BusinessProcessSummary>();
+const getters = CrudStoreBuilder.buildGetters<BusinessProcessFilter, BusinessProcess, BusinessProcessSummary>();
 
 const namespaced: boolean = true;
 

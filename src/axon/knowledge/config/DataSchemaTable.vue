@@ -4,26 +4,17 @@
             <tr>
                 <th @click="toggleSort('key')">
                     {{ $t('axon.knowledge.md.dataSchema.key') }}
-                    <i
-                        class="sort up icon"
-                        v-if="isSortAscending('key')"
-                    ></i>
+                    <i class="sort up icon" v-if="isSortAscending('key')"></i>
                     <i class="sort down icon" v-if="isSortDescending('key')"></i>
                 </th>
                 <th @click="toggleSort('name')">
                     {{ $t('axon.knowledge.md.dataSchema.name') }}
-                    <i
-                        class="sort up icon"
-                        v-if="isSortAscending('name')"
-                    ></i>
+                    <i class="sort up icon" v-if="isSortAscending('name')"></i>
                     <i class="sort down icon" v-if="isSortDescending('name')"></i>
                 </th>
                 <th @click="toggleSort('description')">
                     {{ $t('axon.knowledge.md.dataSchema.description') }}
-                    <i
-                        class="sort up icon"
-                        v-if="isSortAscending('description') "
-                    ></i>
+                    <i class="sort up icon" v-if="isSortAscending('description') "></i>
                     <i class="sort down icon" v-if="isSortDescending('description')"></i>
                 </th>
 
@@ -31,17 +22,13 @@
             </tr>
         </thead>
         <tbody>
-            <tr
-                :class="{ selectable: selection }"
+            <tr :class="{ selectable: selection }"
                 v-for="dataSchema in sortState.sortedEntities"
                 :key="dataSchema.key"
-                @click.prevent="selectDataSchema(dataSchema)"
-            >
+                @click.prevent="selectDataSchema(dataSchema)">
                 <td>{{ dataSchema.key }}</td>
                 <td>
-                    <router-link
-                        :to="`/knowledge-config/schema/view/${dataSchema.key}`"
-                    >{{ dataSchema.name }}</router-link>
+                    <router-link :to="`/knowledge-config/schema/view/${dataSchema.key}`">{{ dataSchema.name }}</router-link>
                 </td>
                 <td>{{ dataSchema.description }}</td>
 

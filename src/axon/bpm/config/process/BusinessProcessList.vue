@@ -39,19 +39,19 @@
                 <template slot-scope="slotProps">
 
                     <router-link class="ui tiny basic icon button"
-                                 :to="`business-process/create/${slotProps.businessProcess.id}`">
+                                 :to="`business-process/create/${slotProps.businessProcess.key}`">
                         <i class="copy outline green icon"></i>
                     </router-link>
                     <router-link class="ui tiny basic icon button"
-                                 :to="`business-process/edit/${slotProps.businessProcess.id}`">
+                                 :to="`business-process/edit/${slotProps.businessProcess.key}`">
                         <i class="edit blue icon"></i>
                     </router-link>
                     <button type="button" class="ui tiny basic icon button"
-                            @click="requestDelete(slotProps.businessProcess.id, slotProps.businessProcess.name)">
+                            @click="requestDelete(slotProps.businessProcess.key, slotProps.businessProcess.name)">
                         <i class="delete red icon"></i>
                     </button>
                     <button type="button" class="ui tiny basic icon button"
-                            @click="run(slotProps.businessProcess.id)"><i
+                            @click="run(slotProps.businessProcess.key)"><i
                             class="play violet icon"></i>
                     </button>
 
@@ -100,10 +100,11 @@
     })
     export default class BusinessProcessList extends Vue {
 
-        filter: BusinessProcessFilter = {...emptyBusinessProcessFilter};
+        filter: BusinessProcessFilter = emptyBusinessProcessFilter();
+
         deleteModalContext = {
             open: false,
-            id: '',
+            key: '',
             name: '',
         };
 
@@ -143,7 +144,7 @@
         }
 
         clearFilter() {
-            this.find({...emptyBusinessProcessFilter});
+            this.find(emptyBusinessProcessFilter());
         }
 
         refresh() {
@@ -158,19 +159,19 @@
             }
         }
 
-        requestDelete(id: string, name: string) {
+        requestDelete(key: string, name: string) {
             this.deleteModalContext = {
                 open: true,
-                id,
+                key,
                 name,
             };
         }
 
         performDelete() {
-            this.deleteBusinessProcess(this.deleteModalContext.id);
+            this.deleteBusinessProcess(this.deleteModalContext.key);
             this.deleteModalContext = {
                 open: false,
-                id: null,
+                key: null,
                 name: null,
             };
         }

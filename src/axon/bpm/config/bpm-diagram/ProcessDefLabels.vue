@@ -1,5 +1,5 @@
 <template>
-    <div class="ui small labels">
+    <div class="ui labels">
         <router-link class="ui label"
                      v-for="pd in processDefinitionsLabels()"
                      :to="{name: 'processDefs', query: {key: pd}}"
