@@ -8,7 +8,7 @@
                         <input
                             type="text"
                             :placeholder="$t('axon.knowledge.form.dataSchemaList.filter')"
-                            v-model="filter"
+                            v-model="filter.filter"
                             @input="setFilter($event.target.value)"
                         >
                         <i
@@ -49,7 +49,7 @@ import _ from 'lodash';
 import AppForm from '@/annette/layout/AppForm.vue';
 import DataSchemaTable from '@/axon/knowledge/config/DataSchemaTable.vue';
 import { KNOWLEDGE_DATA_SCHEMA_SELECTOR_NAMESPACE } from '@/axon/knowledge/shared/data-schema/store';
-import { DataSchemaSummary } from '@/axon/knowledge/shared/data-schema/model';
+import {DataSchemaFilter, DataSchemaSummary, emptyDataSchemaFilter} from '@/axon/knowledge/shared/data-schema/model';
 
 const namespace: string = KNOWLEDGE_DATA_SCHEMA_SELECTOR_NAMESPACE;
 
@@ -61,7 +61,7 @@ const namespace: string = KNOWLEDGE_DATA_SCHEMA_SELECTOR_NAMESPACE;
 })
 export default class DataSchemaModalSelector extends Vue {
 
-    filter: string = '';
+    filter: DataSchemaFilter = emptyDataSchemaFilter();
 
     open = false;
     resolve = null;
@@ -108,16 +108,16 @@ export default class DataSchemaModalSelector extends Vue {
     }
 
     @Watch('filterState')
-    onFilterStateChanged(val: string, oldVal: string) {
+    onFilterStateChanged(val) {
         this.filter = val;
     }
 
     setFilter(filter: string) {
-        this.lazyFind(filter);
+        this.lazyFind({filter});
     }
 
     clearFilter() {
-        this.find('');
+        this.find(emptyDataSchemaFilter());
     }
 
     refresh() {

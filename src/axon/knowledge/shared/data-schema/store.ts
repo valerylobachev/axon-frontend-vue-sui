@@ -1,36 +1,36 @@
 import {Module} from 'vuex';
-import {DataSchemaState} from './types';
-import {mutations} from './mutations';
-import {actions} from './actions';
-import {getters} from './getters';
 import {RootState} from '@/annette/core/store/root-state';
+import {vm} from '@/main';
+import {
+    DataSchema,
+    DataSchemaFilter,
+    DataSchemaSummary,
+    emptyDataSchemaFilter, newDataSchema,
+} from './model';
+import {CrudStoreBuilder} from '@/annette/crud/store/crud-store-builder';
+import {CrudState} from '@/annette/crud/store/crud-types';
+import dataSchemaBackendService from './backend.service';
 
 
-export const state: DataSchemaState = {
-    keys: [],
-    entities: {},
+export interface DataSchemaState
+    extends CrudState<DataSchemaFilter, DataSchema, DataSchemaSummary> {
+}
 
-    filterInitialized: false,
-    filter: '',
-    entitiesLoading: false,
+export const state: DataSchemaState =
+    CrudStoreBuilder.buildState<DataSchemaFilter, DataSchema, DataSchemaSummary>(emptyDataSchemaFilter());
 
-    failure: null,
 
-    sortField: null,
-    sortAscending: true,
-    sortedEntities: [],
+const actions = CrudStoreBuilder.buildActions<DataSchemaFilter, DataSchema, DataSchemaSummary>(
+    dataSchemaBackendService, emptyDataSchemaFilter(), newDataSchema(),
+);
 
-    mode: null,
-    key: null,
-    entity: null,
+const mutations = CrudStoreBuilder.buildMutations<DataSchemaFilter, DataSchema, DataSchemaSummary>(
+    'key',
+    entity => vm.$router.push(`/knowledge-config/schema/edit/${entity.key}`),
+    () => '',
+);
 
-    loading: false,
-    loaded: false,
-
-    saving: false,
-    saved: false,
-};
-
+const getters = CrudStoreBuilder.buildGetters<DataSchemaFilter, DataSchema, DataSchemaSummary>();
 
 const namespaced: boolean = true;
 

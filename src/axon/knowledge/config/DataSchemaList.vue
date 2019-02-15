@@ -7,12 +7,12 @@
             <div class="ten wide column">
                 <div class="ui icon action input" style="width: 100%;">
                     <input type="text" :placeholder="$t('axon.knowledge.form.dataSchemaList.filter')"
-                           v-model="filter"
+                           v-model="filter.filter"
                            @input="setFilter($event.target.value)">
                     <i class=" close link icon"
                        style="right: 2.6em; width: 2em;"
                        @click="clearFilter()"></i>
-                    <button class="ui icon button" @click="$event.stopPropagation(); refresh()">
+                    <button class="ui icon button" @click="refresh()">
                         <i class="search icon"></i>
                     </button>
                 </div>
@@ -83,6 +83,7 @@
     import AppForm from '@/annette/layout/AppForm.vue';
     import DataSchemaTable from '@/axon/knowledge/config/DataSchemaTable.vue';
     import {KNOWLEDGE_DATA_SCHEMA_NAMESPACE} from '@/axon/knowledge/shared/data-schema/store';
+    import {DataSchemaFilter, emptyDataSchemaFilter} from '@/axon/knowledge/shared/data-schema/model';
 
     const namespace: string = KNOWLEDGE_DATA_SCHEMA_NAMESPACE;
 
@@ -94,7 +95,7 @@
     })
     export default class DataSchemaList extends Vue {
 
-        filter: string = '';
+        filter: DataSchemaFilter = emptyDataSchemaFilter();
 
         deleteModalContext = {
             open: false,
@@ -127,16 +128,16 @@
         }
 
         @Watch('filterState')
-        onFilterStateChanged(val: string, oldVal: string) {
+        onFilterStateChanged(val) {
             this.filter = val;
         }
 
         setFilter(filter: string) {
-            this.lazyFind(filter);
+            this.lazyFind({ filter });
         }
 
         clearFilter() {
-            this.find('');
+            this.find(emptyDataSchemaFilter());
         }
 
         refresh() {

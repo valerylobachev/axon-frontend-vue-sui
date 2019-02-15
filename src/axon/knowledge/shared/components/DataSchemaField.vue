@@ -9,28 +9,6 @@
             <input type="text" readonly :value="formatValue">
             <i class="search link icon" @click.prevent="select()"></i>
         </div>
-        <!--<div class="ui list">
-            <div class="item">
-                <div class="right floated content" v-if="!readOnly">
-                    <div class="ui icon button" @click.prevent="select()">
-                        <i class="search link icon"></i>
-                    </div>
-                </div>
-                <div class="content">
-                    <div class="header" v-if="!detail">
-                        <div class="ui small red label">
-                            {{ $t('axon.knowledge.md.dataSchema.invalidDataSchema') }}
-                        </div>
-                    </div>
-                    <router-link class="header"
-                                 v-if="detail"
-                                 :to="`/knowledge-config/schema/view/${detail.key}`">
-                        {{ detail.key }}
-                    </router-link>
-                    <div class="description" v-if="detail">{{ detail.name }}</div>
-                </div>
-            </div>
-        </div>-->
         <data-schema-modal-selector ref="dataSchemaSelector"/>
     </div>
 </template>

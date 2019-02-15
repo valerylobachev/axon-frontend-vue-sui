@@ -66,8 +66,6 @@ export default class DataSchemaTable extends Vue {
     selectDataSchema(dataSchema) {
         if (this.selection) {
             this.$emit('select', dataSchema)
-        } else {
-            this.$router.push(`/knowledge-config/schema/view/${dataSchema.key}`)
         }
     }
 }

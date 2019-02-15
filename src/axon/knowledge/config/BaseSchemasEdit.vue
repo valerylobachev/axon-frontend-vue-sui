@@ -27,7 +27,7 @@
                 <h4 class="ui header">Data schema to select</h4>
                 <div class="ui icon action input fluid">
                     <input type="text" :placeholder="$t('axon.knowledge.form.dataSchemaList.filter')"
-                           v-model="filter"
+                           v-model="filter.filter"
                            @input="setFilter($event.target.value)">
                     <i class=" close link icon"
                        style="right: 2.6em; width: 2em;"
@@ -70,7 +70,11 @@
     import AppForm from '@/annette/layout/AppForm.vue';
     import {KNOWLEDGE_DATA_SCHEMA_SELECTOR_NAMESPACE} from '@/axon/knowledge/shared/data-schema/store';
     import _ from 'lodash';
-    import {DataSchemaSummary} from '@/axon/knowledge/shared/data-schema/model';
+    import {
+        DataSchemaFilter,
+        DataSchemaSummary,
+        emptyDataSchemaFilter,
+    } from '@/axon/knowledge/shared/data-schema/model';
     import dataSchemaBackendService from '@/axon/knowledge/shared/data-schema/backend.service';
 
 
@@ -95,7 +99,7 @@
         @Getter('sortState', {namespace}) sortState;
         @Getter('failure', {namespace}) failure;
 
-        filter: string = '';
+        filter: DataSchemaFilter = emptyDataSchemaFilter();
 
         baseSchemas: string[] = [];
 
@@ -128,11 +132,6 @@
             dataSchemaBackendService.findByKeys(keys).then(res => {
                 res.forEach(e => this.$set(this.schemaSummaries, e.key, e));
             });
-
-
-            console.log('onBaseSchemasChanged');
-            console.log(newVal);
-            console.log(this.value);
         }
 
         @Watch('sortState')
@@ -142,16 +141,16 @@
         }
 
         @Watch('filterState')
-        onFilterStateChanged(val: string, oldVal: string) {
+        onFilterStateChanged(val) {
             this.filter = val;
         }
 
         setFilter(filter: string) {
-            this.lazyFind(filter);
+            this.lazyFind({filter});
         }
 
         clearFilter() {
-            this.find('');
+            this.find(emptyDataSchemaFilter());
         }
 
         refresh() {

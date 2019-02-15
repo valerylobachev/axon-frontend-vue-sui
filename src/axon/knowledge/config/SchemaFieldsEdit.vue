@@ -106,12 +106,7 @@
                             :caption="$t('axon.knowledge.md.dataSchemaField.datatype')"
                     />
 
-                    <!--<value-input-->
-                            <!--:caption="$t('axon.knowledge.md.dataSchemaField.value')"-->
-                            <!--:readOnly="readonly"-->
-                            <!--:datatype="selected.datatype"-->
-                            <!--v-model="selected.value"></value-input>-->
-                    <div class="field">
+                    <div class="field" :class="{error: invalidObject }">
                         <label>{{ $t('axon.knowledge.md.dataSchemaField.value') }}</label>
                         <textarea
                                 type="text"
@@ -119,22 +114,19 @@
                                 key="string"
                                 v-if="selected.datatype.type === 'string' || selected.datatype.type === 'array' || selected.datatype.type === 'record'"
                                 v-model.trim="selected.value"
-                                :readOnly="readonly"
-                        ></textarea>
+                                :readOnly="readonly"></textarea>
                         <input type="number"
                                name="value"
                                key="number"
                                v-if="selected.datatype.type === 'int' || selected.datatype.type === 'decimal' || selected.datatype.type === 'double'"
                                v-model.number="selected.value"
-                               :readOnly="readonly"
-                        >
+                               :readOnly="readonly">
                         <input type="date"
                                name="value"
                                key="date"
                                v-if="selected.datatype.type === 'date'"
                                v-model="selected.value"
-                               :readOnly="readonly"
-                        >
+                               :readOnly="readonly">
                         <div class="inline fields" v-if="selected.datatype.type === 'boolean'">
                             <div class="ui radio checkbox">
                                 <input type="radio"
@@ -205,13 +197,6 @@
             console.log('selected');
             console.log(this.selected);
         }
-
-        // @Watch('selected')
-        // onSelectedChanged(newVal: DataSchemaField, oldVal: DataSchemaField) {
-        //     if (this.selected && newVal && oldVal && newVal.name !== oldVal.name && oldVal.caption === oldVal.name ) {
-        //         this.selected.caption = newVal.name
-        //     }
-        // }
 
         get nameChange() {
             if (this.selected) {
@@ -339,6 +324,26 @@
             return str.charAt(0).toUpperCase() + str.slice(1);
         }
 
+        get invalidObject() {
+            if (this.selected && this.selected.datatype.type === 'array') {
+                try {
+                    const a = JSON.parse(this.selected.value)
+                    return !Array.isArray(a);
+                } catch (e) {
+                    return true;
+                }
+            } else if (this.selected && this.selected.datatype.type === 'record') {
+                try {
+                    const a = JSON.parse(this.selected.value)
+                    return typeof a !== 'object';
+                } catch (e) {
+                    return true;
+                }
+            } else {
+                return false;
+            }
+
+        }
     }
 </script>
 

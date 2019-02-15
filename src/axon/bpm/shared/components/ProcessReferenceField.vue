@@ -1,31 +1,13 @@
 <template>
     <div>
-        <div class="ui list">
-            <div class="item">
-                <div class="right floated content" v-if="!readOnly">
-                    <div class="ui icon button" @click.prevent="select()">
-                        <i class="search link icon"></i>
-                    </div>
-                </div>
-                <div class="content">
-                    <div class="header" v-if="!detail">
-                        <div class="ui small red label">
-                            {{ $t('axon.bpm.md.processDef.invalidProcessReference') }}
-                        </div>
-                    </div>
-                    <router-link class="header" v-if="detail"
-                                 :to="{name: 'processDefs', query: {key: detail.key}}">
-                        {{ detail.key }}
-                        <span v-if="detail.version">
-                            (v. {{ detail.version }})
-                        </span>
-                        <span v-if="!detail.version">
-                                        (latest)
-                        </span>
-                    </router-link>
-                    <div class="description" v-if="detail && detail.name">{{ detail.name }}</div>
-                </div>
+        <div class="ui left labeled right icon input">
+            <div is="router-link" class="ui icon basic label"
+                 v-if="value"
+                 :to="{name: 'processDefs', query: {key: detail.key}}">
+                <i class="tag icon" style="margin-right: 0;"></i>
             </div>
+            <input type="text" readonly :value="formatValue">
+            <i class="search link icon" @click.prevent="select()"></i>
         </div>
         <process-reference-modal-selector ref="processReferenceSelector"/>
     </div>
@@ -53,11 +35,19 @@
                 this.$emit('detailChanged', {
                     key: res.entity.key,
                     version: res.processReference.reference === 'byId' ? res.entity.version : null,
-                    name: res.entity.key,
+                    name: res.entity.name,
                 });
             });
         }
-
+        get formatValue() {
+            if (this.value && this.detail) {
+                const version = this.detail.version ? `(v. ${this.detail.version})` : '(latest)';
+                const name = this.detail.name ? `- ${this.detail.name}` : '' ;
+                return `${this.detail.key} ${version} ${name}`;
+            } else {
+                return '';
+            }
+        }
     }
 </script>
 

@@ -75,7 +75,7 @@ const axonRoutes = [
                 name: 'schemas',
             },
             {
-                path: 'schema/:action/:key',
+                path: 'schema/:action/:id',
                 component: () =>
                     import(/* webpackChunkName: "knowledge-config" */'./knowledge/config/DataSchemaForm.vue'),
                 name: 'schema',

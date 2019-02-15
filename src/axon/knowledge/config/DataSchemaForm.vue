@@ -44,12 +44,12 @@
                     </router-link>
                     <router-link class="ui basic button"
                                  v-if="action == 'view'"
-                                 :to="`../../schema/edit/${key}`">
+                                 :to="`../../schema/edit/${id}`">
                         {{ $t('axon.shared.edit') }}
                     </router-link>
                     <router-link class="ui basic button"
                                  v-if="action == 'edit'"
-                                 :to="`../../schema/view/${key}`"
+                                 :to="`../../schema/view/${id}`"
                                  :class="{ disabled: isDirty }">
                         {{ $t('axon.shared.view') }}
                     </router-link>
@@ -128,7 +128,7 @@
     import {Component, Vue, Watch} from 'vue-property-decorator';
     import {Action, Getter} from 'vuex-class';
     import AppForm from '@/annette/layout/AppForm.vue';
-    import {DataSchema, NEW_DATA_SCHEMA} from '@/axon/knowledge/shared/data-schema/model';
+    import {DataSchema, DataSchemaField, newDataSchema} from '@/axon/knowledge/shared/data-schema/model';
     import {KNOWLEDGE_DATA_SCHEMA_NAMESPACE} from '@/axon/knowledge/shared/data-schema/store';
     import BaseSchemasEdit from '@/axon/knowledge/config/BaseSchemasEdit.vue';
     import SchemaFieldsEdit from '@/axon/knowledge/config/SchemaFieldsEdit.vue';
@@ -143,10 +143,10 @@
         },
     })
     export default class DataSchemaForm extends Vue {
-        dataSchema: DataSchema = NEW_DATA_SCHEMA;
+        dataSchema: DataSchema = newDataSchema();
 
         action = 'view';
-        key = '';
+        id = '';
 
         @Getter('loading', {namespace}) loading;
         @Getter('failure', {namespace}) failure;
@@ -164,8 +164,8 @@
         @Watch('$route', {immediate: true, deep: true})
         onRouteChange(to, from) {
             this.action = to.params.action;
-            this.key = to.params.key;
-            this.initDataSchema({mode: this.action, key: this.key});
+            this.id = to.params.id;
+            this.initDataSchema({mode: this.action, id: this.id});
         }
 
         save() {

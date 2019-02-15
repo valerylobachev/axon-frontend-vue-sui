@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export class BaseBackendService<F, T, S> {
 
-    constructor(protected serviceBase: string, protected entityName: string, protected entityPluralName: string) {
+    constructor(public serviceBase: string, public entityName: string, public entityPluralName: string) {
         if (!entityPluralName) {
             this.entityPluralName = `${entityName}s`;
         }

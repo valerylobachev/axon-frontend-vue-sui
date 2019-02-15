@@ -29,12 +29,25 @@ export interface DataSchema extends DataSchemaSummary {
     fields: DataSchemaFields
 }
 
-export const NEW_DATA_SCHEMA: DataSchema = {
-    key: '',
-    name: '',
-    description: '',
-    baseSchemas: [],
-    fields: {},
+export interface DataSchemaFilter {
+    filter: string
+}
+
+export function emptyDataSchemaFilter(): DataSchemaFilter {
+    return {
+        filter: '',
+    };
+}
+
+
+export function newDataSchema(): DataSchema {
+    return {
+        key: '',
+        name: '',
+        description: '',
+        baseSchemas: [],
+        fields: {},
+    };
 };
 
 
