@@ -5,17 +5,7 @@
 
         <template slot="toolbar">
             <div class="ten wide column">
-                <div class="ui icon action input" style="width: 100%;">
-                    <input type="text" :placeholder="$t('axon.bpm.form.bpmDiagrams.filter')"
-                           v-model="filter.filter"
-                           @input="setFilter($event.target.value)">
-                    <i class=" close link icon"
-                       style="right: 2.6em; width: 2em;"
-                       @click="clearFilter()"></i>
-                    <button class="ui icon button" @click="$event.stopPropagation(); refresh()">
-                        <i class="search icon"></i>
-                    </button>
-                </div>
+                <simple-lazy-filter :filter="filter.filter" @filter="find({ filter: $event })" ></simple-lazy-filter>
             </div>
             <div class="right floated three wide column">
                 <div class="ui right floated primary buttons">
@@ -113,11 +103,13 @@
     import {BPM_DIAGRAM_NAMESPACE} from '@/axon/bpm/shared/diagram/store';
     import bpmDeploymentBackendService from '@/axon/bpm/shared/deployment/backend.service';
     import {BpmDiagramFilter, emptyBpmDiagramFilter} from '@/axon/bpm/shared/diagram/model';
+    import SimpleLazyFilter from '@/annette/crud/ui/SimpleLazyFilter.vue';
 
     const namespace: string = BPM_DIAGRAM_NAMESPACE;
 
     @Component({
         components: {
+            SimpleLazyFilter,
             AppForm,
             ProcessDefList,
             BpmDiagramTable,
@@ -147,11 +139,6 @@
 
         @Action('Delete', {namespace}) deleteBpmDiagram: any;
 
-        lazyFind = _.debounce(f => {
-                this.find(f);
-            },
-            500);
-
         constructor() {
             super();
             this.initFilter();
@@ -166,18 +153,6 @@
         @Watch('filterState')
         onFilterStateChanged(val) {
             this.filter = val;
-        }
-
-        setFilter(filter: string) {
-            this.lazyFind({filter});
-        }
-
-        clearFilter() {
-            this.find(emptyBpmDiagramFilter());
-        }
-
-        refresh() {
-            this.find(this.filterState);
         }
 
         get isEmpty() {
