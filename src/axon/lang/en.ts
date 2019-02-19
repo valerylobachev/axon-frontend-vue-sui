@@ -164,6 +164,8 @@ export default {
             ok: 'Ok',
             clear: 'Clear',
             find: 'Find',
+            filter: 'Filter',
+            actions: 'Actions',
         },
     },
 

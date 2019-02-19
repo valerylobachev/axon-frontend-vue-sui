@@ -1,88 +1,69 @@
 <template>
-    <table class="ui selectable fixed single line striped table">
-        <thead>
-        <tr>
-            <th @click="toggleSort('name')">
-                {{ $t('axon.bpm.md.bpmDiagram.name') }}
-                <i class="sort up icon" v-if="isSortAscending('name')"></i>
-                <i class="sort down icon" v-if="isSortDescending('name')"></i>
-            </th>
-            <th @click="toggleSort('description')">
-                {{ $t('axon.bpm.md.bpmDiagram.description') }}
-                <i class="sort up icon" v-if="isSortAscending('description') "></i>
-                <i class="sort down icon" v-if="isSortDescending('description')"></i>
-            </th>
-            <th @click="toggleSort('notation')">
-                {{ $t('axon.bpm.md.bpmDiagram.notation') }}
-                <i class="sort up icon" v-if="isSortAscending('notation')"></i>
-                <i class="sort down icon" v-if="isSortDescending('notation')"></i>
-            </th>
-            <th @click="toggleSort('processDefinitions')">
-                {{ $t('axon.bpm.md.bpmDiagram.processDefinitions') }}
-                <i class="sort up icon" v-if="isSortAscending('processDefinitions')"></i>
-                <i class="sort down icon" v-if="isSortDescending('processDefinitions')"></i>
-            </th>
-            <th style="width: 12em;">{{ $t('axon.bpm.form.bpmDiagrams.actions') }}</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="bpmDiagram in sortState.sortedEntities">
-            <td>
-                <router-link :to="`diagram/view/${bpmDiagram.id}`">{{ bpmDiagram.name }}</router-link>
-            </td>
-            <td>{{ bpmDiagram.description }}</td>
-            <td>
-                <div class="ui basic label">{{ bpmDiagram.notation }}</div>
-            </td>
-            <td>
-                <process-def-list :value="bpmDiagram.processDefinitions"></process-def-list>
-            </td>
-            <td>
-                <slot v-bind:bpmDiagram="bpmDiagram"></slot>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <entity-table :data="sortState.sortedEntities"
+                  :sortField="sortState.sortField"
+                  :sortAscending="sortState.sortAscending"
+                  :selectable="false"
+                  captionPrefix="axon.bpm.md.bpmDiagram"
+                  notFoundCaption="axon.bpm.form.bpmDiagrams.notFound"
+                  :columns="columns"
+                  @toggleSort="$emit('toggleSort', $event)">
+        <template v-slot:nameCell="slotProps">
+            <router-link :to="`diagram/view/${slotProps.entity.id}`">{{ slotProps.entity.name }}</router-link>
+        </template>
+        <template v-slot:notationCell="slotProps">
+            <div class="ui basic label">{{ slotProps.entity.notation }}</div>
+        </template>
+        <template v-slot:processDefinitionsCell="slotProps">
+            <process-def-list :value="slotProps.entity.processDefinitions"></process-def-list>
+        </template>
+        <template v-slot:actionsCell="slotProps">
+            <router-link class="ui tiny basic icon button"
+                         :to="`diagram/create/${slotProps.entity.id}`">
+                <i class="copy outline green icon"></i>
+            </router-link>
+            <router-link class="ui tiny basic icon button"
+                         :to="`diagram/edit/${slotProps.entity.id}`">
+                <i class="edit blue icon"></i>
+            </router-link>
+            <button type="button" class="ui tiny basic icon button"
+                    @click="$emit('deploy', slotProps.entity.id)"><i
+                    class="upload violet icon"></i>
+            </button>
+            <button type="button" class="ui tiny basic icon button"
+                    @click="$emit('delete', slotProps.entity)">
+                <i class="delete red icon"></i>
+            </button>
+        </template>
+
+    </entity-table>
 </template>
 
 <script lang="ts">
     import {Component, Prop, Vue} from 'vue-property-decorator';
-    import {BpmDiagramSummary} from '@/axon/bpm/shared/diagram/model';
     import ProcessDefList from './ProcessDefLabels.vue';
+    import EntityTable from '@/annette/crud/ui/EntityTable.vue';
+    import {TableColumn} from '@/annette/crud/ui/table-model';
 
     @Component({
         components: {
             ProcessDefList,
+            EntityTable,
         },
     })
     export default class BpmDiagramTable extends Vue {
 
         @Prop(Object) sortState;
 
-        toggleSort(field: string) {
-            this.$emit('toggleSort', field);
-        }
+        columns: TableColumn[] = [
+            {field: 'name', sortable: true},
+            {field: 'description', sortable: true},
+            {field: 'notation', sortable: true},
+            {field: 'processDefinitions', sortable: true},
+            {actions: true, width: '12em'},
+        ];
 
-        isSortAscending(field: string) {
-            return this.sortState.sortField === field && this.sortState.sortAscending;
-        }
-
-        isSortDescending(field: string) {
-            return this.sortState.sortField === field && !this.sortState.sortAscending;
-        }
-
-        processDefinitionsList(bpmDiagram: BpmDiagramSummary) {
-            if (bpmDiagram && bpmDiagram.processDefinitions && bpmDiagram.processDefinitions.length > 0) {
-                return bpmDiagram.processDefinitions.split(' ');
-            } else {
-                return [];
-            }
-        }
     }
 </script>
 
 <style lang="scss">
-    .ui.table thead th {
-        cursor: pointer;
-    }
 </style>

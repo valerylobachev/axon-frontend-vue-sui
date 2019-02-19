@@ -3,53 +3,14 @@
         <sui-modal-header>{{ $t('axon.knowledge.form.dataSchemaModalSelector.title') }}</sui-modal-header>
         <sui-modal-content scrolling>
             <sui-modal-description>
-                <div class="row">
-                    <div class="ui form form-row">
-                        <div class="form-input">
-                            <div class="fields">
-                                <div class="eight wide field">
-                                    <label>{{ $t('axon.bpm.md.processDef.key') }}</label>
-                                    <div class="ui fluid icon input">
-                                        <input type="text" v-model="filter.key">
-                                        <i class=" close link icon" @click="filter.key = ''"></i>
-                                    </div>
-                                </div>
-                                <div class="eight wide field">
-                                    <label>{{ $t('axon.bpm.md.processDef.name') }}</label>
-                                    <div class="ui fluid icon input">
-                                        <input type="text" v-model="filter.name">
-                                        <i class=" close link icon" @click="filter.name = ''"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="ui toggle checkbox">
-                                <input type="checkbox" v-model="filter.latest">
-                                <label>{{ $t('axon.bpm.form.processDefList.latest') }}</label>
-                            </div>
-                        </div>
-                        <div class="form-buttons">
-                            <button class="ui fluid primary button" @click="find(filter)">
-                                {{ $t('axon.shared.find') }}
-                            </button>
-                            <button class="ui fluid basic button" @click="clearFilter()">
-                                {{ $t('axon.shared.clear') }}
-                            </button>
-                        </div>
-                    </div>
+                <div class="row" style="margin-bottom: 1em;">
+                    <process-def-filter :filter="filter" @filter="find"></process-def-filter>
                 </div>
                 <process-def-table
-                        v-if="!isEmpty"
                         :sortState="sortState"
                         @toggleSort="toggleSort"
-                        :selection="true"
-                        @select="selectEntity($event)"
-                ></process-def-table>
-                <div class="ui placeholder segment" v-if="isEmpty">
-                    <div class="ui icon header">
-                        <i class="object group outline icon"></i>
-                        {{ $t('axon.bpm.form.processDefList.notFound') }}
-                    </div>
-                </div>
+                        :selectable="true"
+                        @select="selectEntity($event)"></process-def-table>
             </sui-modal-description>
         </sui-modal-content>
         <sui-modal-actions>
@@ -61,16 +22,16 @@
 <script lang="ts">
     import {Component, Vue, Watch} from 'vue-property-decorator';
     import {Action, Getter, Mutation} from 'vuex-class';
-    import _ from 'lodash';
-    import {emptyProcessDefFilter, FindProcessDefOptions} from '@/axon/bpm/shared/deployment/model';
     import {BPM_DEPLOYMENT_NAMESPACE} from '@/axon/bpm/shared/deployment/store';
     import ProcessDefTable from '@/axon/bpm/config/deployment/ProcessDefTable.vue';
+    import ProcessDefFilter from '@/axon/bpm/config/deployment/ProcessDefFilter.vue';
 
     const namespace: string = BPM_DEPLOYMENT_NAMESPACE;
 
     @Component({
         components: {
             ProcessDefTable,
+            ProcessDefFilter,
         },
     })
     export default class ProcessReferenceModalSelector extends Vue {
@@ -79,50 +40,17 @@
         resolve = null;
         reject = null;
 
-        filter: FindProcessDefOptions = emptyProcessDefFilter();
-
-
         @Action('InitFilter', {namespace}) initFilter: any;
         @Action('Find', {namespace}) find: any;
         @Mutation('ToggleSort', {namespace}) toggleSort: any;
         @Mutation('ClearFailure', {namespace}) clearFailure: any;
-        @Getter('filter', {namespace}) filterState;
+        @Getter('filter', {namespace}) filter;
         @Getter('sortState', {namespace}) sortState;
         @Getter('failure', {namespace}) failure;
 
         constructor() {
             super();
             this.initFilter();
-        }
-
-        created() {
-            if (this.filterState) {
-                this.filter = this.filterState;
-            }
-        }
-
-        @Watch('$route', {immediate: true, deep: true})
-        onRouteChange(to, from) {
-            if (to.query.key) {
-                this.find({...emptyProcessDefFilter(), key: to.query.key});
-            }
-        }
-
-        @Watch('filterState')
-        onFilterStateChanged(newVal: FindProcessDefOptions) {
-            this.filter = newVal;
-        }
-
-        clearFilter() {
-            this.find(emptyProcessDefFilter());
-        }
-
-        get isEmpty() {
-            if (this.sortState && this.sortState.sortedEntities) {
-                return this.sortState.sortedEntities.length === 0;
-            } else {
-                return true;
-            }
         }
 
         select() {
@@ -165,25 +93,4 @@
 
 <style lang="scss">
 
-    .form-row {
-        display: flex;
-        justify-content: space-between;
-        align-content: center;
-
-        width: 100%;
-        margin: 0 1em;
-    }
-
-    .form-input {
-        margin-right: 1em;
-        flex-grow: 1
-    }
-
-    .form-buttons {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-        margin-left: 2em;
-        min-width: 9em;
-    }
 </style>

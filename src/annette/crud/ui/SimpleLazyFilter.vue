@@ -1,6 +1,6 @@
 <template>
     <div class="ui icon action input" style="width: 100%;">
-        <input type="text" :placeholder="$t('axon.bpm.form.bpmDiagrams.filter')"
+        <input type="text" :placeholder="placeholder ? placeholder : $t('axon.shared.filter')"
                :value="filter"
                @input="setFilter($event.target.value)">
         <i class=" close link icon"

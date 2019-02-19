@@ -1,82 +1,83 @@
 <template>
-    <table class="ui selectable fixed single line striped table">
-        <thead>
-            <tr>
-                <th @click="toggleSort('key')">
-                    {{ $t('axon.knowledge.md.dataSchema.key') }}
-                    <i class="sort up icon" v-if="isSortAscending('key')"></i>
-                    <i class="sort down icon" v-if="isSortDescending('key')"></i>
-                </th>
-                <th @click="toggleSort('name')">
-                    {{ $t('axon.knowledge.md.dataSchema.name') }}
-                    <i class="sort up icon" v-if="isSortAscending('name')"></i>
-                    <i class="sort down icon" v-if="isSortDescending('name')"></i>
-                </th>
-                <th @click="toggleSort('description')">
-                    {{ $t('axon.knowledge.md.dataSchema.description') }}
-                    <i class="sort up icon" v-if="isSortAscending('description') "></i>
-                    <i class="sort down icon" v-if="isSortDescending('description')"></i>
-                </th>
 
-                <th v-if="!selection" style="width: 9em;">{{ $t('axon.knowledge.form.dataSchemaList.actions') }}</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr :class="{ selectable: selection }"
-                v-for="dataSchema in sortState.sortedEntities"
-                :key="dataSchema.key"
-                @click.prevent="selectDataSchema(dataSchema)">
-                <td>{{ dataSchema.key }}</td>
-                <td>
-                    <router-link :to="`/knowledge-config/schema/view/${dataSchema.key}`">{{ dataSchema.name }}</router-link>
-                </td>
-                <td>{{ dataSchema.description }}</td>
+    <entity-table :data="sortState.sortedEntities"
+                  :sortField="sortState.sortField"
+                  :sortAscending="sortState.sortAscending"
+                  :selectable="selectable"
+                  keyField="key"
+                  captionPrefix="axon.knowledge.md.dataSchema"
+                  notFoundCaption="axon.knowledge.form.dataSchemaList.notFound"
+                  :columns="columns"
+                  @toggleSort="$emit('toggleSort', $event)"
+                  @select="selectEntity($event)">
+        <template v-if="!selectable" v-slot:nameCell="slotProps">
+            <router-link v-if="!selectable" :to="`/knowledge-config/schema/view/${slotProps.entity.key}`">
+                {{ slotProps.entity.name }}
+            </router-link>
+        </template>
 
-                <td v-if="!selection">
-                    <slot v-bind:dataSchema="dataSchema"></slot>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+
+        <template v-if="!selectable" v-slot:actionsCell="slotProps">
+
+            <router-link class="ui tiny basic icon button"
+                         :to="`/knowledge-config/schema/create/${slotProps.entity.key}`">
+                <i class="copy outline green icon"></i>
+            </router-link>
+            <router-link class="ui tiny basic icon button"
+                         :to="`/knowledge-config/schema/edit/${slotProps.entity.key}`">
+                <i class="edit blue icon"></i>
+            </router-link>
+            <button type="button" class="ui tiny basic icon button"
+                    @click="$emit('delete', slotProps.entity)">
+                <i class="delete red icon"></i>
+            </button>
+
+        </template>
+    </entity-table>
+
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+    import {Component, Prop, Vue} from 'vue-property-decorator';
+    import {TableColumn} from '@/annette/crud/ui/table-model';
+    import EntityTable from '@/annette/crud/ui/EntityTable.vue';
 
-@Component({
-    components: {},
-})
-export default class DataSchemaTable extends Vue {
+    const COLUMNS: TableColumn[] = [
+        {field: 'key', sortable: true},
+        {field: 'name', sortable: true},
+        {field: 'description', sortable: true},
+        {actions: true, width: '9em'},
+    ];
 
-    @Prop(Object) sortState;
-    @Prop({ default: false }) selection;
+    const COLUMNS_FOR_SELECTION: TableColumn[] = [
+        {field: 'key', sortable: true},
+        {field: 'name', sortable: true},
+        {field: 'description', sortable: true},
+    ];
 
-    toggleSort(field: string) {
-        this.$emit('toggleSort', field);
-    }
+    @Component({
+        components: {EntityTable},
+    })
+    export default class DataSchemaTable extends Vue {
 
-    isSortAscending(field: string) {
-        return this.sortState.sortField === field && this.sortState.sortAscending;
-    }
+        @Prop(Object) sortState;
+        @Prop({default: false}) selectable;
 
-    isSortDescending(field: string) {
-        return this.sortState.sortField === field && !this.sortState.sortAscending;
-    }
+        selectEntity(entity) {
+            if (this.selectable) {
+                this.$emit('select', entity);
+            }
+        }
 
-    selectDataSchema(dataSchema) {
-        if (this.selection) {
-            this.$emit('select', dataSchema)
+        get columns() {
+            if (this.selectable) {
+                return COLUMNS_FOR_SELECTION;
+            } else {
+                return COLUMNS;
+            }
         }
     }
-}
 </script>
 
 <style lang="scss">
-.ui.table thead th {
-    cursor: pointer;
-}
-
-.selectable {
-    cursor: pointer;
-}
 </style>

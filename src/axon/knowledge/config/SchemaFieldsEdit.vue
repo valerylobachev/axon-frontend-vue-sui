@@ -327,14 +327,14 @@
         get invalidObject() {
             if (this.selected && this.selected.datatype.type === 'array') {
                 try {
-                    const a = JSON.parse(this.selected.value)
+                    const a = JSON.parse(this.selected.value);
                     return !Array.isArray(a);
                 } catch (e) {
                     return true;
                 }
             } else if (this.selected && this.selected.datatype.type === 'record') {
                 try {
-                    const a = JSON.parse(this.selected.value)
+                    const a = JSON.parse(this.selected.value);
                     return typeof a !== 'object';
                 } catch (e) {
                     return true;
@@ -348,11 +348,5 @@
 </script>
 
 <style lang="scss">
-    .ui.table tbody tr {
-        cursor: pointer;
-    }
 
-    .ui.table thead th {
-        cursor: pointer;
-    }
 </style>

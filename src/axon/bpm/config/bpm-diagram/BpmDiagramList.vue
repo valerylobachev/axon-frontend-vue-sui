@@ -1,11 +1,9 @@
 <template>
     <app-form>
-
         <h3 slot="header" class="header">{{ $t('axon.bpm.form.bpmDiagrams.title') }}</h3>
-
         <template slot="toolbar">
             <div class="ten wide column">
-                <simple-lazy-filter :filter="filter.filter" @filter="find({ filter: $event })" ></simple-lazy-filter>
+                <simple-lazy-filter :filter="filter.filter" @filter="find({ filter: $event })"></simple-lazy-filter>
             </div>
             <div class="right floated three wide column">
                 <div class="ui right floated primary buttons">
@@ -27,7 +25,6 @@
         </template>
 
         <div class="ui segment" v-if="failure">
-
             <div class="ui negative message">
                 <i class="close icon" @click="clearFailure"></i>
                 <div class="header">
@@ -36,79 +33,40 @@
                 <p> {{ $t(failure.code, failure) }}</p>
             </div>
         </div>
-        <div class="ui segment" v-if="!isEmpty">
-            <bpm-diagram-table :sortState="sortState" @toggleSort="toggleBpmDiagramSort">
-                <template slot-scope="slotProps">
 
-                    <router-link class="ui tiny basic icon button"
-                                 :to="`diagram/create/${slotProps.bpmDiagram.id}`">
-                        <i class="copy outline green icon"></i>
-                    </router-link>
-                    <router-link class="ui tiny basic icon button"
-                                 :to="`diagram/edit/${slotProps.bpmDiagram.id}`">
-                        <i class="edit blue icon"></i>
-                    </router-link>
-                    <button type="button" class="ui tiny basic icon button"
-                            @click="deploy(slotProps.bpmDiagram.id)"><i
-                            class="upload violet icon"></i>
-                    </button>
-                    <button type="button" class="ui tiny basic icon button"
-                            @click="requestDelete(slotProps.bpmDiagram.id, slotProps.bpmDiagram.name)">
-                        <i class="delete red icon"></i>
-                    </button>
-
-                </template>
+        <div class="ui segment">
+            <bpm-diagram-table :sortState="sortState"
+                               @toggleSort="toggleSort"
+                               @deploy="deploy($event)"
+                               @delete="requestDelete($event)">
             </bpm-diagram-table>
         </div>
-        <div class="ui placeholder segment" v-if="isEmpty">
-            <div class="ui icon header">
-                <i class="object group outline icon"></i>
-                {{ $t('axon.bpm.form.bpmDiagrams.notFound') }}
-            </div>
-        </div>
 
+        <delete-entity-modal ref="deleteDialog"></delete-entity-modal>
+        <message-modal ref="deployDialog"></message-modal>
 
-        <sui-modal v-model="deleteModalContext.open" size="tiny">
-            <sui-modal-header>{{ $t('axon.shared.delete')}}</sui-modal-header>
-            <sui-modal-content image>
-                <p>{{ $t('axon.bpm.md.bpmDiagram.delete', {name: deleteModalContext.name})}}</p>
-            </sui-modal-content>
-            <sui-modal-actions>
-                <button class="ui basic button" @click="deleteModalContext.open = false">{{ $t('axon.shared.cancel')}}
-                </button>
-                <button class="ui red button" @click="performDelete" autofocus>{{ $t('axon.shared.delete')}}</button>
-            </sui-modal-actions>
-        </sui-modal>
-
-        <sui-modal v-model="deployModalContext.open" size="tiny">
-            <sui-modal-header>{{ $t('axon.bpm.form.bpmDiagrams.deployedTitle') }}</sui-modal-header>
-            <sui-modal-content image>
-                <p>{{ $t('axon.bpm.form.bpmDiagrams.deployed', {name: deployModalContext.name})}}</p>
-            </sui-modal-content>
-            <sui-modal-actions>
-                <button class="ui basic button" @click="deployModalContext.open = false">{{ $t('axon.shared.ok')}}
-                </button>
-            </sui-modal-actions>
-        </sui-modal>
     </app-form>
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Watch} from 'vue-property-decorator';
+    import {Component, Vue} from 'vue-property-decorator';
     import {Action, Getter, Mutation} from 'vuex-class';
-    import _ from 'lodash';
     import AppForm from '@/annette/layout/AppForm.vue';
     import ProcessDefList from './ProcessDefLabels.vue';
     import BpmDiagramTable from './BpmDiagramTable.vue';
     import {BPM_DIAGRAM_NAMESPACE} from '@/axon/bpm/shared/diagram/store';
     import bpmDeploymentBackendService from '@/axon/bpm/shared/deployment/backend.service';
-    import {BpmDiagramFilter, emptyBpmDiagramFilter} from '@/axon/bpm/shared/diagram/model';
     import SimpleLazyFilter from '@/annette/crud/ui/SimpleLazyFilter.vue';
+    import {BpmDiagramSummary} from '@/axon/bpm/shared/diagram/model';
+    import DeleteEntityModal from '@/annette/crud/ui/DeleteEntityModal.vue';
+    import MessageModal from '@/annette/crud/ui/MessageModal.vue';
 
     const namespace: string = BPM_DIAGRAM_NAMESPACE;
 
     @Component({
         components: {
+            MessageModal,
+            DeleteEntityModal,
             SimpleLazyFilter,
             AppForm,
             ProcessDefList,
@@ -117,75 +75,41 @@
     })
     export default class BpmDiagramList extends Vue {
 
-        filter: BpmDiagramFilter = emptyBpmDiagramFilter();
-        deleteModalContext = {
-            open: false,
-            id: '',
-            name: '',
-        };
-
-        deployModalContext = {
-            open: false,
-            name: '',
-        };
-
         @Action('InitFilter', {namespace}) initFilter: any;
         @Action('Find', {namespace}) find: any;
-        @Mutation('ToggleSort', {namespace}) toggleBpmDiagramSort: any;
+        @Mutation('ToggleSort', {namespace}) toggleSort: any;
         @Mutation('ClearFailure', {namespace}) clearFailure: any;
-        @Getter('filter', {namespace}) filterState;
+        @Getter('filter', {namespace}) filter;
         @Getter('sortState', {namespace}) sortState;
         @Getter('failure', {namespace}) failure;
 
-        @Action('Delete', {namespace}) deleteBpmDiagram: any;
+        @Action('Delete', {namespace}) deleteEntity: any;
 
         constructor() {
             super();
             this.initFilter();
         }
 
-        created() {
-            if (this.filterState) {
-                this.filter = this.filterState;
-            }
-        }
-
-        @Watch('filterState')
-        onFilterStateChanged(val) {
-            this.filter = val;
-        }
-
-        get isEmpty() {
-            if (this.sortState && this.sortState.sortedEntities) {
-                return this.sortState.sortedEntities.length === 0;
-            } else {
-                return true;
-            }
-        }
-
-        requestDelete(id: string, name: string) {
-            this.deleteModalContext = {
-                open: true,
-                id,
-                name,
+        requestDelete(entity: BpmDiagramSummary) {
+            const message = {
+                code: 'axon.bpm.md.bpmDiagram.delete',
+                name: entity.name,
             };
+
+            (this.$refs.deleteDialog as DeleteEntityModal).show(null, message).then(del => {
+                this.deleteEntity(entity.id);
+            });
         }
 
-        performDelete() {
-            this.deleteBpmDiagram(this.deleteModalContext.id);
-            this.deleteModalContext = {
-                open: false,
-                id: null,
-                name: null,
-            };
-        }
 
         deploy(id: string) {
             bpmDeploymentBackendService.deploy(id).then(result => {
-                this.deployModalContext = {
-                    open: true,
+                const message = {
+                    code: 'axon.bpm.form.bpmDiagrams.deployed',
                     name: result.name,
                 };
+                (this.$refs.deployDialog as MessageModal)
+                    .show('axon.bpm.form.bpmDiagrams.deployedTitle', message);
             });
         }
     }

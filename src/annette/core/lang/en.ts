@@ -5,5 +5,8 @@ export default {
             settings: 'Settings',
             logout: 'Logout',
         },
+        entityTable: {
+            notFound: 'No item has been found.',
+        },
     },
 }
