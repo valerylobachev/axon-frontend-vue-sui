@@ -112,7 +112,6 @@ export default {
                     key: 'Key',
                     name: 'Name',
                     description: 'Description',
-                    baseSchemas: 'Base records',
                     fields: 'Fields',
                     delete: 'Are you sure to delete data schema {name}?',
                     invalidDataSchema: 'Invalid data schema',
@@ -142,8 +141,14 @@ export default {
                     nameRequired: 'Name required',
                     keyRequired: 'Key required',
                     infoTab: 'Info',
-                    baseSchemasTab: 'Base schemas',
                     fieldsTab: 'Fields',
+                },
+                schemaFieldTable: {
+                    notFound: 'No data schema fields has been defined.',
+                },
+                schemaFieldDialog: {
+                    viewTitle: 'View data schema field',
+                    editTitle: 'Edit data schema field',
                 },
                 dataSchemaModalSelector: {
                     title: 'Select data schema',

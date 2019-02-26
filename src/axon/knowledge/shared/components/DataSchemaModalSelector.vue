@@ -22,14 +22,11 @@
 <script lang="ts">
     import {Component, Vue, Watch} from 'vue-property-decorator';
     import {Action, Getter, Mutation} from 'vuex-class';
-    import _ from 'lodash';
     import AppForm from '@/annette/layout/AppForm.vue';
     import DataSchemaTable from '@/axon/knowledge/config/DataSchemaTable.vue';
     import {KNOWLEDGE_DATA_SCHEMA_SELECTOR_NAMESPACE} from '@/axon/knowledge/shared/data-schema/store';
     import {
-        DataSchemaFilter,
         DataSchemaSummary,
-        emptyDataSchemaFilter
     } from '@/axon/knowledge/shared/data-schema/model';
     import SimpleLazyFilter from '@/annette/crud/ui/SimpleLazyFilter.vue';
 

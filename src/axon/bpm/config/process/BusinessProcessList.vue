@@ -1,8 +1,6 @@
 <template>
     <app-form>
-
         <h3 slot="header" class="header">{{ $t('axon.bpm.form.businessProcessList.title') }}</h3>
-
         <template slot="toolbar">
             <div class="ten wide column">
                 <simple-lazy-filter :filter="filter.filter" @filter="find({ filter: $event })"></simple-lazy-filter>
@@ -15,7 +13,6 @@
         </template>
 
         <div class="ui segment" v-if="failure">
-
             <div class="ui negative message">
                 <i class="close icon" @click="clearFailure"></i>
                 <div class="header">
@@ -24,6 +21,7 @@
                 <p> {{ $t(failure.code, failure) }}</p>
             </div>
         </div>
+
         <div class="ui segment">
             <business-process-table :sortState="sortState"
                                     @toggleSort="toggleSort"

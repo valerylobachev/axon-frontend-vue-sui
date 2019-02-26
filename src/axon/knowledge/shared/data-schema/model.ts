@@ -25,7 +25,6 @@ export interface DataSchemaFields {
 }
 
 export interface DataSchema extends DataSchemaSummary {
-    baseSchemas: string[],
     fields: DataSchemaFields
 }
 
@@ -45,7 +44,6 @@ export function newDataSchema(): DataSchema {
         key: '',
         name: '',
         description: '',
-        baseSchemas: [],
         fields: {},
     };
 };

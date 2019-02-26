@@ -105,15 +105,10 @@
                                       :readOnly="action == 'view'"></textarea>
                         </div>
                     </sui-tab-pane>
-                    <sui-tab-pane :title="$t('axon.knowledge.form.dataSchemaForm.baseSchemasTab')">
-                        <base-schemas-edit v-model="dataSchema.baseSchemas"
-                                           :readonly="action == 'view'"
-                                           :parentKey="dataSchema.key"></base-schemas-edit>
-                    </sui-tab-pane>
 
                     <sui-tab-pane :title="$t('axon.knowledge.form.dataSchemaForm.fieldsTab')">
-                        <schema-fields-edit v-model="dataSchema.fields"
-                                           :readonly="action == 'view'"></schema-fields-edit>
+                        <schema-fields-table v-model="dataSchema.fields"
+                                           :readonly="action == 'view'"></schema-fields-table>
 
                     </sui-tab-pane>
                 </sui-tab>
@@ -128,18 +123,17 @@
     import {Component, Vue, Watch} from 'vue-property-decorator';
     import {Action, Getter} from 'vuex-class';
     import AppForm from '@/annette/layout/AppForm.vue';
-    import {DataSchema, DataSchemaField, newDataSchema} from '@/axon/knowledge/shared/data-schema/model';
+    import {DataSchema, newDataSchema} from '@/axon/knowledge/shared/data-schema/model';
     import {KNOWLEDGE_DATA_SCHEMA_NAMESPACE} from '@/axon/knowledge/shared/data-schema/store';
-    import BaseSchemasEdit from '@/axon/knowledge/config/BaseSchemasEdit.vue';
-    import SchemaFieldsEdit from '@/axon/knowledge/config/SchemaFieldsEdit.vue';
+    import SchemaFieldsEdit from '@/axon/knowledge/config/form/SchemaFieldsEdit.vue';
+    import SchemaFieldsTable from '@/axon/knowledge/config/form/SchemaFieldsTable.vue';
 
     const namespace: string = KNOWLEDGE_DATA_SCHEMA_NAMESPACE;
 
     @Component({
         components: {
             AppForm,
-            BaseSchemasEdit,
-            SchemaFieldsEdit,
+            SchemaFieldsTable,
         },
     })
     export default class DataSchemaForm extends Vue {
@@ -196,7 +190,7 @@
 <style lang="scss">
 
     .ui.secondary.pointing.menu {
-        margin-bottom: 0px;
+        margin-bottom: 0;
     }
 
     .ui.tab.segment.attached {

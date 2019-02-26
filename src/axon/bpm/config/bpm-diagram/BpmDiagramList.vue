@@ -52,7 +52,6 @@
     import {Component, Vue} from 'vue-property-decorator';
     import {Action, Getter, Mutation} from 'vuex-class';
     import AppForm from '@/annette/layout/AppForm.vue';
-    import ProcessDefList from './ProcessDefLabels.vue';
     import BpmDiagramTable from './BpmDiagramTable.vue';
     import {BPM_DIAGRAM_NAMESPACE} from '@/axon/bpm/shared/diagram/store';
     import bpmDeploymentBackendService from '@/axon/bpm/shared/deployment/backend.service';
@@ -65,12 +64,11 @@
 
     @Component({
         components: {
+            AppForm,
+            BpmDiagramTable,
             MessageModal,
             DeleteEntityModal,
             SimpleLazyFilter,
-            AppForm,
-            ProcessDefList,
-            BpmDiagramTable,
         },
     })
     export default class BpmDiagramList extends Vue {
