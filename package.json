@@ -10,7 +10,7 @@
     "watch": "vue-cli-service build --watch"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "bpmn-js": "^3.2.1",
     "bpmn-js-properties-panel": "^0.29.0",
     "bpmn-moddle": "^5.1.6",
